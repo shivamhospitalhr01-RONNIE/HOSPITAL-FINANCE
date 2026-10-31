@@ -1,204 +1,189 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <base target="_top">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    :root{--bg:#f4f5f7;--panel:#fff;--ink:#17191d;--muted:#737984;--line:#e5e7eb;--dark:#17191d;--accent:#2563eb;--green:#16a36a;--red:#dc5353}
-    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px Inter,Arial,sans-serif}
-    button,input,select,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:9px;padding:10px 14px;background:var(--dark);color:#fff}
-    button.secondary{background:#eceef1;color:#222}button.blue{background:var(--accent)}button:disabled{opacity:.5;cursor:not-allowed}
-    .login-wrap{min-height:100vh;display:grid;place-items:center;padding:20px}.login{width:min(420px,100%);background:#fff;padding:30px;border:1px solid var(--line);border-radius:18px;box-shadow:0 18px 50px #0000000d}
-    .brand{font-size:22px;font-weight:800;letter-spacing:-.5px}.sub{color:var(--muted);margin:7px 0 22px}
-    label{display:block;font-size:12px;font-weight:700;color:#4b515b;margin:12px 0 6px}
-    input,select,textarea{width:100%;border:1px solid #dfe2e7;border-radius:9px;padding:11px;background:#fff;outline:none}
-    input:focus,select:focus,textarea:focus{border-color:#8baaf8}textarea{min-height:70px;resize:vertical}
-    .app{display:none;min-height:100vh}.sidebar{width:245px;background:#17191d;color:#fff;position:fixed;inset:0 auto 0 0;padding:22px 14px;display:flex;flex-direction:column;z-index:4}
-    .logo{font-size:18px;font-weight:800;padding:5px 10px 24px}.logo small{display:block;color:#aeb4be;font-size:10px;font-weight:500;margin-top:5px;letter-spacing:1px}
-    .nav{display:grid;gap:5px}.nav button{background:transparent;text-align:left;color:#c8cbd1;padding:12px;border-radius:9px}.nav button.active,.nav button:hover{background:#30343b;color:#fff}
-    .side-bottom{margin-top:auto;color:#aeb4be;font-size:12px;padding:12px}
-    .main{margin-left:245px;padding:26px;max-width:1600px}.top{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:24px}
-    h1{font-size:24px;margin:0}h2{font-size:17px;margin:0 0 16px}.muted{color:var(--muted)}.user-chip{background:#fff;border:1px solid var(--line);border-radius:30px;padding:9px 13px}
-    .grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;min-width:0}
-    .metric-label{color:var(--muted);font-size:12px}.metric{font-size:25px;font-weight:800;margin-top:9px}.metric-note{font-size:11px;color:var(--muted);margin-top:5px}
-    .content-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:14px;margin-top:14px}.section{display:none}.section.active{display:block}
-    .panel-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:15px}.table-wrap{overflow:auto}
-    table{width:100%;border-collapse:collapse;white-space:nowrap;font-size:12px}th,td{text-align:left;padding:11px 9px;border-bottom:1px solid var(--line)}th{color:#6c727c;font-size:11px;background:#fafafa}
-    .status{display:inline-block;border-radius:30px;padding:5px 8px;background:#fff3d8;color:#8a5a00;font-size:10px;font-weight:700}.status.Approved{background:#e3f7ed;color:#087747}.status.Rejected{background:#ffe7e7;color:#a83232}
-    .form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 14px}.span2{grid-column:span 2}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
-    .chart{height:190px;display:flex;align-items:end;gap:12px;padding:18px 5px 0}.bar-group{flex:1;display:flex;flex-direction:column;align-items:center;gap:7px;height:100%;justify-content:end}.bar-pair{height:145px;display:flex;align-items:end;gap:4px}.bar{width:15px;min-height:2px;border-radius:5px 5px 0 0;background:#272b33}.bar.exp{background:#9ca3af}.bar-label{font-size:10px;color:var(--muted)}
-    .list{display:grid;gap:10px}.list-row{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}.empty{padding:25px;text-align:center;color:var(--muted)}
-    .notice{padding:10px 12px;border-radius:9px;background:#eef4ff;color:#254c9c;margin-bottom:15px;font-size:12px}.toast{position:fixed;right:20px;bottom:20px;background:#17191d;color:white;padding:13px 17px;border-radius:10px;display:none;z-index:20;max-width:360px}
-    .modal-back{display:none;position:fixed;inset:0;background:#0008;z-index:10;place-items:center;padding:15px}.modal{background:#fff;border-radius:16px;padding:22px;width:min(620px,100%);max-height:90vh;overflow:auto}
-    @media(max-width:900px){.sidebar{width:75px;padding:15px 8px}.logo{font-size:0}.logo:before{content:'HF';font-size:20px}.logo small{display:none}.nav button{font-size:0;text-align:center}.nav button:before{content:attr(data-icon);font-size:17px}.side-bottom{display:none}.main{margin-left:75px;padding:18px}.grid{grid-template-columns:repeat(2,1fr)}}
-    @media(max-width:600px){.main{padding:13px}.grid{grid-template-columns:1fr 1fr;gap:8px}.card{padding:13px}.metric{font-size:20px}.content-grid{grid-template-columns:1fr}.top{align-items:flex-start}.form-grid{grid-template-columns:1fr}.span2{grid-column:auto}.top h1{font-size:20px}}
-  </style>
+<meta charset="utf-8">
+<title>Hospital Finance ERP</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root{--bg:#f4f5f7;--panel:#fff;--ink:#17191d;--muted:#737984;--line:#e5e7eb;--dark:#17191d;--accent:#2563eb}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px Inter,Arial,sans-serif}
+button,input,select,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:9px;padding:10px 14px;background:var(--dark);color:#fff}
+button.secondary{background:#eceef1;color:#222}button.blue{background:var(--accent)}
+.login-wrap{min-height:100vh;display:grid;place-items:center;padding:20px}.login{width:min(420px,100%);background:#fff;padding:30px;border:1px solid var(--line);border-radius:18px}
+.brand{font-size:22px;font-weight:800}.sub{color:var(--muted);margin:7px 0 22px}
+label{display:block;font-size:12px;font-weight:700;color:#4b515b;margin:12px 0 6px}
+input,select,textarea{width:100%;border:1px solid #dfe2e7;border-radius:9px;padding:11px;background:#fff;color:#17191d;outline:none}textarea{min-height:70px;resize:vertical}
+.app{display:none;min-height:100vh}.sidebar{width:245px;background:#17191d;color:#fff;position:fixed;inset:0 auto 0 0;padding:22px 14px;display:flex;flex-direction:column;z-index:4}
+.logo{font-size:18px;font-weight:800;padding:5px 10px 24px}.logo small{display:block;color:#aeb4be;font-size:10px;font-weight:500;margin-top:5px;letter-spacing:1px}
+.nav{display:grid;gap:5px}.nav button{background:transparent;text-align:left;color:#c8cbd1;padding:12px}.nav button.active,.nav button:hover{background:#30343b;color:#fff}
+.side-bottom{margin-top:auto;color:#aeb4be;font-size:12px;padding:12px}
+.main{margin-left:245px;padding:26px;max-width:1600px}.top{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:24px}
+h1{font-size:24px;margin:0}h2{font-size:17px;margin:0 0 16px}.muted{color:var(--muted)}.user-chip{background:#fff;border:1px solid var(--line);border-radius:30px;padding:9px 13px}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;min-width:0}
+.metric-label{color:var(--muted);font-size:12px}.metric{font-size:25px;font-weight:800;margin-top:9px}.metric-note{font-size:11px;color:var(--muted);margin-top:5px}
+.content-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:14px;margin-top:14px}.section{display:none}.section.active{display:block}
+.panel-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:15px}.table-wrap{overflow:auto}
+table{width:100%;border-collapse:collapse;white-space:nowrap;font-size:12px}th,td{text-align:left;padding:11px 9px;border-bottom:1px solid var(--line)}th{color:#6c727c;font-size:11px;background:#fafafa}
+.status{display:inline-block;border-radius:30px;padding:5px 8px;background:#fff3d8;color:#8a5a00;font-size:10px;font-weight:700}.status.Approved{background:#e3f7ed;color:#087747}.status.Rejected{background:#ffe7e7;color:#a83232}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 14px}.span2{grid-column:span 2}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.chart{height:190px;display:flex;align-items:end;gap:12px;padding:18px 5px 0}.bar-group{flex:1;display:flex;flex-direction:column;align-items:center;gap:7px;height:100%;justify-content:end}.bar-pair{height:145px;display:flex;align-items:end;gap:4px}.bar{width:15px;min-height:2px;border-radius:5px 5px 0 0;background:#272b33}.bar.exp{background:#9ca3af}.bar-label{font-size:10px;color:var(--muted)}
+.list{display:grid;gap:10px}.list-row{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}.empty{padding:25px;text-align:center;color:var(--muted)}
+.notice{padding:10px 12px;border-radius:9px;background:#eef4ff;color:#254c9c;margin-bottom:15px;font-size:12px}.toast{position:fixed;right:20px;bottom:20px;background:#17191d;color:#fff;padding:13px 17px;border-radius:10px;display:none;z-index:20;max-width:360px}
+@media(max-width:900px){.sidebar{width:75px;padding:15px 8px}.logo{font-size:0}.logo:before{content:'HF';font-size:20px}.logo small{display:none}.nav button{font-size:0;text-align:center}.nav button:before{content:attr(data-icon);font-size:17px}.side-bottom{display:none}.main{margin-left:75px;padding:18px}.grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.main{padding:13px}.grid{gap:8px}.card{padding:13px}.metric{font-size:20px}.content-grid{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.span2{grid-column:auto}}
+</style>
 </head>
 <body>
-<div id="loginScreen" class="login-wrap">
-  <div class="login">
-    <div class="brand">HOSPITAL FINANCE ERP</div>
-    <div class="sub">Secure finance operations workspace</div>
-    <div class="notice">First-time login: <b>admin</b> / <b>ChangeMe123!</b> — change this password immediately.</div>
-    <label>Username</label><input id="loginUser" value="admin" autocomplete="username">
-    <label>Password</label><input id="loginPass" type="password" placeholder="Enter password" autocomplete="current-password">
-    <div class="actions"><button class="blue" style="width:100%" onclick="doLogin()">Sign in</button></div>
-    <p class="muted" style="font-size:11px">Access is controlled by your assigned role.</p>
-  </div>
-</div>
+<div id="loginScreen" class="login-wrap"><div class="login">
+<div class="brand">HOSPITAL FINANCE ERP</div><div class="sub">Secure finance operations workspace</div>
+<div class="notice">First-time login: <b>admin</b> / <b>ChangeMe123!</b> – change this password immediately.</div>
+<label>Username</label><input id="loginUser" value="admin" autocomplete="username">
+<label>Password</label><input id="loginPass" type="password" placeholder="Enter password" autocomplete="current-password">
+<div class="actions"><button class="blue" style="width:100%" onclick="doLogin()">Sign in</button></div>
+</div></div>
 
 <div id="app" class="app">
-  <aside class="sidebar">
-    <div class="logo">HOSPITAL FINANCE<small>ERP WORKSPACE</small></div>
-    <nav class="nav">
-      <button class="active" data-icon="▦" onclick="showSection('dashboard',this)">▦ &nbsp; Dashboard</button>
-      <button data-icon="＋" onclick="showSection('transactions',this)">＋ &nbsp; Transactions</button>
-      <button data-icon="◷" onclick="showSection('approvals',this)">◷ &nbsp; Approvals</button>
-      <button data-icon="✚" onclick="showSection('rounds',this)">✚ &nbsp; Doctor Rounds</button>
-      <button data-icon="▤" onclick="showSection('vendors',this)">▤ &nbsp; Vendors & Dues</button>
-      <button data-icon="▥" onclick="showSection('reports',this)">▥ &nbsp; Reports</button>
-      <button id="staffNav" data-icon="♙" onclick="showSection('staff',this)">♙ &nbsp; Staff & Settings</button>
-    </nav>
-    <div class="side-bottom"><div id="sideName">Signed in</div><div id="sideRole"></div><button class="secondary" style="margin-top:12px;width:100%" onclick="doLogout()">Sign out</button></div>
-  </aside>
+<aside class="sidebar">
+<div class="logo">HOSPITAL FINANCE<small>ERP WORKSPACE</small></div>
+<nav class="nav">
+<button class="active" data-icon="▦" onclick="showSection('dashboard',this)">▦ &nbsp; Dashboard</button>
+<button data-icon="＋" onclick="showSection('transactions',this)">＋ &nbsp; Transactions</button>
+<button data-icon="◷" onclick="showSection('approvals',this)">◷ &nbsp; Approvals</button>
+<button data-icon="✚" onclick="showSection('rounds',this)">✚ &nbsp; Doctor Rounds</button>
+<button data-icon="▤" onclick="showSection('vendors',this)">▤ &nbsp; Vendors &amp; Dues</button>
+<button data-icon="▥" onclick="showSection('reports',this)">▥ &nbsp; Reports</button>
+<button id="staffNav" data-icon="♙" onclick="showSection('staff',this)">♙ &nbsp; Staff &amp; Settings</button>
+</nav>
+<div class="side-bottom"><div id="sideName"></div><div id="sideRole"></div><button class="secondary" style="margin-top:12px;width:100%" onclick="doLogout()">Sign out</button></div>
+</aside>
+<main class="main">
+<div class="top"><div><div class="muted" style="font-size:11px;margin-bottom:5px">HOSPITAL FINANCE / WORKSPACE</div><h1 id="pageTitle">Dashboard</h1></div><div class="user-chip" id="userChip">User</div></div>
 
-  <main class="main">
-    <div class="top"><div><div class="muted" style="font-size:11px;margin-bottom:5px">HOSPITAL FINANCE / WORKSPACE</div><h1 id="pageTitle">Dashboard</h1></div><div class="user-chip" id="userChip">User</div></div>
-
-    <section id="dashboard" class="section active">
-      <div class="grid">
-        <div class="card"><div class="metric-label">Approved Income</div><div class="metric" id="mIncome">₹0</div><div class="metric-note">Approved transaction entries</div></div>
-        <div class="card"><div class="metric-label">Approved Expenses</div><div class="metric" id="mExpense">₹0</div><div class="metric-note">Approved outflow entries</div></div>
-        <div class="card"><div class="metric-label">Net Position</div><div class="metric" id="mNet">₹0</div><div class="metric-note">Income minus expenses</div></div>
-        <div class="card"><div class="metric-label">Pending Approvals</div><div class="metric" id="mPending">0</div><div class="metric-note">Awaiting review</div></div>
-      </div>
-      <div class="content-grid">
-        <div class="card"><div class="panel-head"><h2>Monthly Cashflow</h2><span class="muted">Last recorded months</span></div><div id="cashChart" class="chart"></div><div class="muted" style="font-size:11px">Black = income · Grey = expense</div></div>
-        <div class="card"><div class="panel-head"><h2>Vendor Outstanding</h2><span class="muted" id="duesTotal">₹0</span></div><div id="duesPreview" class="list"></div></div>
-      </div>
-      <div class="card" style="margin-top:14px"><div class="panel-head"><h2>Recent Transactions</h2><button class="secondary" onclick="showSection('transactions')">View all</button></div><div id="recentTable"></div></div>
-    </section>
-
-    <section id="transactions" class="section">
-      <div class="card">
-        <div class="panel-head"><div><h2>Create Transaction</h2><div class="muted">Cash, online, RTGS and other entries</div></div></div>
-        <form id="txForm" onsubmit="submitTransaction(event)">
-          <div class="form-grid">
-            <div><label>Transaction Type</label><select name="type"><option value="Income">Income / Collection</option><option value="Expense">Expense / Payment</option></select></div>
-            <div><label>Date</label><input name="date" type="date" required></div>
-            <div><label>Head</label><select name="head" id="headSelect"></select></div>
-            <div><label>Amount (₹)</label><input name="amount" type="number" min="0.01" step="0.01" required></div>
-            <div><label>Payment Mode</label><select name="mode"><option>Cash</option><option>Online</option><option>RTGS</option><option>UPI</option><option>Cheque</option><option>Other</option></select></div>
-            <div><label>Reference / UTR</label><input name="reference" placeholder="Optional"></div>
-            <div class="span2"><label>Description / Remarks</label><textarea name="description" placeholder="Enter transaction details"></textarea></div>
-            <div class="span2"><label>Upload receipt / proof (JPG, PNG, WEBP, PDF; max 5 MB)</label><input id="txProof" type="file" accept="image/jpeg,image/png,image/webp,application/pdf"></div>
-          </div>
-          <div class="actions"><button class="blue">Submit for approval</button><button type="reset" class="secondary">Clear</button></div>
-        </form>
-      </div>
-      <div class="card" style="margin-top:14px"><h2>Transaction Register</h2><div id="txTable"></div></div>
-    </section>
-
-    <section id="approvals" class="section"><div class="card"><div class="panel-head"><h2>Approval Queue</h2><span class="muted">Supervisor / Super Admin</span></div><div id="approvalTable"></div></div></section>
-
-    <section id="rounds" class="section">
-      <div class="card"><h2>Doctor Round Fee Entry</h2>
-        <form id="roundForm" onsubmit="submitRound(event)"><div class="form-grid">
-          <div><label>Date</label><input name="date" type="date" required></div><div><label>Doctor Name</label><input name="doctor" required placeholder="Doctor name"></div>
-          <div><label>Patient / Department</label><input name="patient" placeholder="Optional"></div><div><label>Amount (₹)</label><input name="amount" type="number" min="0.01" step="0.01" required></div>
-          <div><label>Payment Mode</label><select name="mode"><option>Cash</option><option>Online</option><option>RTGS</option><option>UPI</option><option>Other</option></select></div><div><label>Reference</label><input name="reference"></div>
-          <div class="span2"><label>Description</label><textarea name="description"></textarea></div><div class="span2"><label>Receipt / Proof</label><input id="roundProof" type="file" accept="image/*,application/pdf"></div>
-        </div><div class="actions"><button class="blue">Save Round Entry</button></div></form>
-      </div>
-      <div class="card" style="margin-top:14px"><h2>Doctor Round Register</h2><div id="roundTable"></div></div>
-    </section>
-
-    <section id="vendors" class="section">
-      <div class="grid" style="grid-template-columns:repeat(2,minmax(0,1fr))">
-        <div class="card"><h2>Add Vendor</h2><form id="vendorForm" onsubmit="submitVendor(event)">
-          <label>Vendor Name</label><input name="name" required><label>Contact</label><input name="contact"><label>Category</label><input name="category" placeholder="Medicine, equipment, service"><label>Opening Due (₹)</label><input name="openingDue" type="number" min="0" step="0.01" value="0"><label>Notes</label><textarea name="notes"></textarea><div class="actions"><button class="blue">Add Vendor</button></div>
-        </form></div>
-        <div class="card"><h2>Record Vendor Bill</h2><form id="billForm" onsubmit="submitBill(event)">
-          <label>Vendor</label><select name="vendorId" id="billVendor" required></select><label>Bill Date</label><input name="billDate" type="date" required><label>Bill Number</label><input name="billNumber"><label>Amount (₹)</label><input name="amount" type="number" min="0.01" step="0.01" required><label>Description</label><textarea name="description"></textarea><label>Bill Image / PDF</label><input id="billProof" type="file" accept="image/*,application/pdf"><div class="actions"><button class="blue">Save Bill</button></div>
-        </form></div>
-        <div class="card"><h2>Vendor Payment</h2><form id="payForm" onsubmit="submitPayment(event)">
-          <label>Vendor</label><select name="vendorId" id="payVendor" required></select><label>Payment Date</label><input name="date" type="date" required><label>Amount (₹)</label><input name="amount" type="number" min="0.01" step="0.01" required><label>Mode</label><select name="mode"><option>Cash</option><option>Online</option><option>RTGS</option><option>UPI</option><option>Cheque</option></select><label>UTR / Reference</label><input name="reference"><label>Payment Proof</label><input id="payProof" type="file" accept="image/*,application/pdf"><div class="actions"><button class="blue">Submit Payment</button></div>
-        </form></div>
-        <div class="card"><h2>Pending Vendor Dues</h2><div id="vendorDues"></div></div>
-      </div>
-      <div class="card" style="margin-top:14px"><h2>Vendor Master</h2><div id="vendorTable"></div></div>
-    </section>
-
-    <section id="reports" class="section"><div class="card"><div class="panel-head"><h2>Finance Summary</h2><button class="secondary" onclick="loadData()">Refresh</button></div><div id="reportContent"></div></div></section>
-
-    <section id="staff" class="section">
-      <div class="grid" style="grid-template-columns:repeat(2,minmax(0,1fr))">
-        <div class="card"><h2>Create Staff Login</h2><form id="staffForm" onsubmit="submitStaff(event)">
-          <label>Username</label><input name="username" required><label>Full Name</label><input name="name" required><label>Email</label><input name="email" type="email"><label>Role</label><select name="role"><option>Employee</option><option>Supervisor</option><option>Super Admin</option></select><label>Temporary Password</label><input name="password" type="password" minlength="8" required><div class="actions"><button class="blue">Create Login</button></div>
-        </form></div>
-        <div class="card"><h2>Change My Password</h2><form id="passwordForm" onsubmit="changePassword(event)">
-          <label>Current Password</label><input name="oldPassword" type="password" required><label>New Password (min 8 characters)</label><input name="newPassword" type="password" minlength="8" required><div class="actions"><button class="blue">Update Password</button></div>
-        </form><hr style="border:0;border-top:1px solid var(--line);margin:20px 0"><h2>Add Transaction Head</h2><form onsubmit="addHead(event)"><label>New Head Name</label><input id="newHead" required><div class="actions"><button class="secondary">Add Head</button></div></form></div>
-      </div>
-      <div class="card" style="margin-top:14px"><h2>Staff Accounts</h2><div id="staffTable"></div></div>
-    </section>
-  </main>
+<section id="dashboard" class="section active">
+<div class="grid">
+<div class="card"><div class="metric-label">Approved Income</div><div class="metric" id="mIncome"></div><div class="metric-note">Approved entries</div></div>
+<div class="card"><div class="metric-label">Approved Expenses</div><div class="metric" id="mExpense"></div><div class="metric-note">Approved outflow</div></div>
+<div class="card"><div class="metric-label">Net Position</div><div class="metric" id="mNet"></div><div class="metric-note">Income minus expenses</div></div>
+<div class="card"><div class="metric-label">Pending Approvals</div><div class="metric" id="mPending"></div><div class="metric-note">Awaiting review</div></div>
 </div>
+<div class="content-grid">
+<div class="card"><div class="panel-head"><h2>Monthly Cashflow</h2></div><div id="cashChart" class="chart"></div><div class="muted" style="font-size:11px">Black = income · Grey = expense</div></div>
+<div class="card"><div class="panel-head"><h2>Vendor Outstanding</h2><span class="muted" id="duesTotal"></span></div><div id="duesPreview" class="list"></div></div>
+</div>
+<div class="card" style="margin-top:14px"><div class="panel-head"><h2>Recent Transactions</h2><button class="secondary" onclick="showSection('transactions')">View all</button></div><div id="recentTable"></div></div>
+</section>
+
+<section id="transactions" class="section">
+<div class="card"><h2>Create Transaction</h2>
+<form onsubmit="submitTransaction(event)"><div class="form-grid">
+<div><label>Transaction Type</label><select name="type"><option value="Income">Income / Collection</option><option value="Expense">Expense / Payment</option></select></div>
+<div><label>Date</label><input name="date" type="date" required></div>
+<div><label>Head</label><select name="head" id="headSelect"></select></div>
+<div><label>Amount (₹)</label><input name="amount" type="number" min="0.01" step="0.01" required></div>
+<div><label>Payment Mode</label><select name="mode"><option>Cash</option><option>Online</option><option>RTGS</option><option>UPI</option><option>Cheque</option><option>Other</option></select></div>
+<div><label>Reference / UTR</label><input name="reference" placeholder="Optional"></div>
+<div class="span2"><label>Description / Remarks</label><textarea name="description"></textarea></div>
+<div class="span2"><label>Upload receipt / proof (JPG, PNG, WEBP, PDF; max 5 MB)</label><input id="txProof" type="file" accept="image/jpeg,image/png,image/webp,application/pdf"></div>
+</div><div class="actions"><button class="blue">Submit for approval</button><button type="reset" class="secondary">Clear</button></div></form></div>
+<div class="card" style="margin-top:14px"><h2>Transaction Register</h2><div id="txTable"></div></div>
+</section>
+
+<section id="approvals" class="section"><div class="card"><div class="panel-head"><h2>Approval Queue</h2><span class="muted">Supervisor / Super Admin</span></div><div id="approvalTable"></div></div></section>
+
+<section id="rounds" class="section">
+<div class="card"><h2>Doctor Round Fee Entry</h2>
+<form onsubmit="submitRound(event)"><div class="form-grid">
+<div><label>Date</label><input name="date" type="date" required></div><div><label>Doctor Name</label><input name="doctor" required></div>
+<div><label>Patient / Department</label><input name="patient"></div><div><label>Amount (₹)</label><input name="amount" type="number" min="0.01" step="0.01" required></div>
+<div><label>Payment Mode</label><select name="mode"><option>Cash</option><option>Online</option><option>RTGS</option><option>UPI</option><option>Other</option></select></div><div><label>Reference</label><input name="reference"></div>
+<div class="span2"><label>Upload receipt / proof (JPG, PNG, WEBP, PDF; max 5 MB)</label><input id="roundProof" type="file" accept="image/jpeg,image/png,image/webp,application/pdf"></div>
+</div><div class="actions"><button class="blue">Save Round Entry</button></div></form></div>
+<div class="card" style="margin-top:14px"><h2>Doctor Round Register</h2><div id="roundTable"></div></div>
+</section>
+
+<section id="vendors" class="section">
+<div class="grid" style="grid-template-columns:repeat(2,minmax(0,1fr))">
+<div class="card"><h2>Add Vendor</h2><form onsubmit="submitVendor(event)">
+<label>Vendor Name</label><input name="name" required><label>Contact</label><input name="contact"><label>Category</label><input name="category"><label>Opening Due (₹)</label><input name="openingDue" type="number" min="0" step="0.01" value="0"><div class="actions"><button class="blue">Add Vendor</button></div></form></div>
+<div class="card"><h2>Record Vendor Bill</h2><form onsubmit="submitBill(event)">
+<label>Vendor</label><select name="vendorId" id="billVendor" required></select><label>Bill Date</label><input name="billDate" type="date" required><label>Bill Number</label><input name="billNumber"><label>Amount (₹)</label><input name="amount" type="number" min="0.01" step="0.01" required><label>Bill Image / PDF</label><input id="billProof" type="file" accept="image/*,application/pdf"><div class="actions"><button class="blue">Save Bill</button></div></form></div>
+<div class="card"><h2>Vendor Payment</h2><form onsubmit="submitPayment(event)">
+<label>Vendor</label><select name="vendorId" id="payVendor" required></select><label>Payment Date</label><input name="date" type="date" required><label>Amount (₹)</label><input name="amount" type="number" min="0.01" step="0.01" required><label>Mode</label><select name="mode"><option>Cash</option><option>Online</option><option>RTGS</option><option>UPI</option><option>Cheque</option></select><label>Payment Proof</label><input id="payProof" type="file" accept="image/*,application/pdf"><div class="actions"><button class="blue">Submit Payment</button></div></form></div>
+<div class="card"><h2>Pending Vendor Dues</h2><div id="vendorDues"></div></div>
+</div>
+<div class="card" style="margin-top:14px"><h2>Vendor Master</h2><div id="vendorTable"></div></div>
+</section>
+
+<section id="reports" class="section"><div class="card"><div class="panel-head"><h2>Finance Summary</h2><button class="secondary" onclick="loadData()">Refresh</button></div><div id="reportContent"></div></div></section>
+
+<section id="staff" class="section">
+<div class="grid" style="grid-template-columns:repeat(2,minmax(0,1fr))">
+<div class="card"><h2>Create Staff Login</h2><form onsubmit="submitStaff(event)">
+<label>Username</label><input name="username" required><label>Full Name</label><input name="name" required><label>Email</label><input name="email" type="email"><label>Role</label><select name="role"><option>Employee</option><option>Supervisor</option><option>Super Admin</option></select><label>Temporary Password</label><input name="password" type="password" minlength="8" required><div class="actions"><button class="blue">Create Login</button></div></form></div>
+<div class="card"><h2>Change My Password</h2><form onsubmit="changePassword(event)">
+<label>Current Password</label><input name="oldPassword" type="password" required><label>New Password (min 8)</label><input name="newPassword" type="password" minlength="8" required><div class="actions"><button class="blue">Update Password</button></div></form>
+<hr style="border:0;border-top:1px solid var(--line);margin:20px 0"><h2>Add Transaction Head</h2><form onsubmit="addHead(event)"><label>New Head Name</label><input id="newHead" required><div class="actions"><button class="secondary">Add Head</button></div></form></div>
+</div>
+<div class="card" style="margin-top:14px"><h2>Staff Accounts</h2><div id="staffTable"></div></div>
+</section>
+</main></div>
 <div id="toast" class="toast"></div>
 
 <script>
-let TOKEN='', USER=null, DATA=null;
+let TOKEN='',USER=null,DATA=null;
 const $=id=>document.getElementById(id);
 const money=n=>'₹'+Number(n||0).toLocaleString('en-IN',{maximumFractionDigits:2});
 const today=()=>new Date().toISOString().slice(0,10);
-function toast(msg){$('toast').textContent=msg;$('toast').style.display='block';setTimeout(()=>$('toast').style.display='none',3500)}
-const API_URL = 'https://script.google.com/macros/s/AKfycbxtJAfPGzqV7V9mRlfjHf1ayaAylwL9SaQARWSjSJzi7EkX-HFf7q9pEIWTv3c_tPzTaA/exec';
+function toast(m){$('toast').textContent=m;$('toast').style.display='block';setTimeout(()=>$('toast').style.display='none',3500)}
 
-async function call(fn, ...args) {
-  const res = await fetch(API_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-    body: JSON.stringify({ fn, args })
-  });
-  const data = await res.json();
-  if (!data.ok) throw new Error(data.error);
+/* ---------- Backend connection ---------- */
+// If you redeploy Code.gs as a NEW deployment, paste the new Web app URL here.
+const API_URL='https://script.google.com/macros/s/AKfycbzXHBK3nmsj64LW88vHMtIOf4VqgLmeXuAOyCEE8qRWM3uXsdfm-YsfyAwzCokfZ5WzkQ/exec';
+async function call(fn,...args){
+  const res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({fn,args})});
+  const data=await res.json();
+  if(!data.ok)throw new Error(data.error);
   return data.result;
 }
-async function doLogin(){try{const r=await call('login',$('loginUser').value,$('loginPass').value);if(!r.ok)throw new Error(r.message);TOKEN=r.token;USER=r.user;await loadData();$('loginScreen').style.display='none';$('app').style.display='block';$('userChip').textContent=USER.name+' · '+USER.role;$('sideName').textContent=USER.name;$('sideRole').textContent=USER.role;if(USER.role!=='Super Admin')$('staffNav').style.display='none';}catch(e){toast(e.message)}}
-async function doLogout(){try{await call('logout',TOKEN)}catch(e){}TOKEN='';USER=null;$('app').style.display='none';$('loginScreen').style.display='grid'}
+async function fileData(id){const f=$(id).files[0];if(!f)return null;if(f.size>5*1024*1024)throw new Error('File must be 5 MB or smaller');return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res({data:r.result,mime:f.type});r.onerror=rej;r.readAsDataURL(f)})}
+
+/* ---------- UI ---------- */
+async function doLogin(){try{const r=await call('login',$('loginUser').value,$('loginPass').value);if(!r.ok)throw new Error(r.message);TOKEN=r.token;USER=r.user;await loadData();$('loginScreen').style.display='none';$('app').style.display='block';$('userChip').textContent=USER.name+' · '+USER.role;$('sideName').textContent=USER.name;$('sideRole').textContent=USER.role}catch(e){toast(e.message)}}
+async function doLogout(){TOKEN='';USER=null;$('app').style.display='none';$('loginScreen').style.display='grid'}
 async function loadData(){try{DATA=await call('getBootstrap',TOKEN);renderAll()}catch(e){toast(e.message);if(String(e.message).includes('Session'))doLogout()}}
 function showSection(id,btn){document.querySelectorAll('.section').forEach(x=>x.classList.remove('active'));$(id).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');$('pageTitle').textContent=({dashboard:'Dashboard',transactions:'Transactions',approvals:'Approval Queue',rounds:'Doctor Round Fee',vendors:'Vendors & Dues',reports:'Finance Reports',staff:'Staff & Settings'})[id]}
-function renderAll(){if(!DATA)return;const d=DATA.dashboard;$('mIncome').textContent=money(d.totalIn);$('mExpense').textContent=money(d.totalOut);$('mNet').textContent=money(d.net);$('mPending').textContent=d.pending;$('duesTotal').textContent=money(d.duesTotal);
-$('cashChart').innerHTML=(d.monthly||[]).map(m=>{let max=Math.max(1,...d.monthly.map(x=>Math.max(x.income,x.expense)));return `<div class="bar-group"><div class="bar-pair"><div class="bar" style="height:${m.income/max*140}px" title="${money(m.income)}"></div><div class="bar exp" style="height:${m.expense/max*140}px" title="${money(m.expense)}"></div></div><div class="bar-label">${esc(m.month)}</div></div>`}).join('')||'<div class="empty">No approved data yet</div>';
+function renderAll(){if(!DATA)return;const d=DATA.dashboard;
+$('mIncome').textContent=money(d.totalIn);$('mExpense').textContent=money(d.totalOut);$('mNet').textContent=money(d.net);$('mPending').textContent=d.pending;$('duesTotal').textContent=money(d.duesTotal);
+const max=Math.max(1,...d.monthly.map(x=>Math.max(x.income,x.expense)));
+$('cashChart').innerHTML=d.monthly.map(m=>`<div class="bar-group"><div class="bar-pair"><div class="bar" style="height:${m.income/max*140}px" title="${money(m.income)}"></div><div class="bar exp" style="height:${m.expense/max*140}px" title="${money(m.expense)}"></div></div><div class="bar-label">${esc(m.month)}</div></div>`).join('')||'<div class="empty">No approved data yet</div>';
 $('duesPreview').innerHTML=d.dues.slice(0,6).map(v=>`<div class="list-row"><span>${esc(v.name)}</span><b>${money(v.due)}</b></div>`).join('')||'<div class="empty">No outstanding vendor dues</div>';
 $('recentTable').innerHTML=table(DATA.transactions.slice(0,8),['Date','Type','Head','Amount','Payment Mode','Status']);
 $('txTable').innerHTML=table(DATA.transactions,['Date','Transaction ID','Type','Head','Amount','Payment Mode','Submitted By','Status','Proof URL']);
 $('roundTable').innerHTML=table(DATA.rounds,['Date','Round ID','Doctor Name','Patient/Department','Amount','Payment Mode','Entered By','Status','Proof URL']);
-const pendingTx=DATA.transactions.filter(x=>x.Status==='Pending'), pendingRounds=DATA.rounds.filter(x=>x.Status==='Pending'), pendingPays=DATA.payments.filter(x=>x.Status==='Pending');
-let q=[];pendingTx.forEach(x=>q.push({...x,_type:'transaction'}));pendingRounds.forEach(x=>q.push({...x,_type:'round'}));pendingPays.forEach(x=>q.push({...x,_type:'payment'}));
-$('approvalTable').innerHTML=USER.role==='Employee'?'<div class="empty">Approval actions are available to Supervisors and Super Admins.</div>':q.length?`<div class="table-wrap"><table><thead><tr><th>Type</th><th>ID</th><th>Date</th><th>Details</th><th>Amount</th><th>Submitted By</th><th>Action</th></tr></thead><tbody>${q.map(x=>`<tr><td>${esc(x._type)}</td><td>${esc(x['Transaction ID']||x['Round ID']||x['Payment ID'])}</td><td>${esc(x.Date||x['Payment Date'])}</td><td>${esc(x.Head||x['Doctor Name']||x['Vendor Name']||x.Description||'')}</td><td>${money(x.Amount)}</td><td>${esc(x['Submitted By']||x['Entered By']||x['Paid By'])}</td><td><button class="blue" onclick="decide('${x._type}','${esc(x['Transaction ID']||x['Round ID']||x['Payment ID'])}','approve')">Approve</button> <button class="secondary" onclick="decide('${x._type}','${esc(x['Transaction ID']||x['Round ID']||x['Payment ID'])}','reject')">Reject</button></td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">No pending approvals</div>';
-const vendors=DATA.vendors||[];$('billVendor').innerHTML=vendors.map(v=>`<option value="${esc(v['Vendor ID'])}">${esc(v['Vendor Name'])}</option>`).join('');$('payVendor').innerHTML=$('billVendor').innerHTML;
-$('vendorTable').innerHTML=table(vendors,['Vendor ID','Vendor Name','Contact','Category','Opening Due','Active']);
+let q=[];DATA.transactions.filter(x=>x.Status==='Pending').forEach(x=>q.push({...x,_type:'transaction'}));DATA.rounds.filter(x=>x.Status==='Pending').forEach(x=>q.push({...x,_type:'round'}));DATA.payments.filter(x=>x.Status==='Pending').forEach(x=>q.push({...x,_type:'payment'}));
+const idOf=x=>x['Transaction ID']||x['Round ID']||x['Payment ID'];
+$('approvalTable').innerHTML=USER.role==='Employee'?'<div class="empty">Approval actions are available to Supervisors and Super Admins.</div>':q.length?`<div class="table-wrap"><table><thead><tr><th>Type</th><th>ID</th><th>Date</th><th>Details</th><th>Amount</th><th>Submitted By</th><th>Action</th></tr></thead><tbody>${q.map(x=>`<tr><td>${esc(x._type)}</td><td>${esc(idOf(x))}</td><td>${esc(x.Date||x['Payment Date'])}</td><td>${esc(x.Head||x['Doctor Name']||x['Vendor Name']||'')}</td><td>${money(x.Amount)}</td><td>${esc(x['Submitted By']||x['Entered By']||x['Paid By'])}</td><td><button class="blue" onclick="decide('${x._type}','${esc(idOf(x))}','approve')">Approve</button> <button class="secondary" onclick="decide('${x._type}','${esc(idOf(x))}','reject')">Reject</button></td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">No pending approvals</div>';
+$('billVendor').innerHTML=DATA.vendors.map(v=>`<option value="${esc(v['Vendor ID'])}">${esc(v['Vendor Name'])}</option>`).join('');$('payVendor').innerHTML=$('billVendor').innerHTML;
+$('vendorTable').innerHTML=table(DATA.vendors,['Vendor ID','Vendor Name','Contact','Category','Opening Due','Active']);
 $('vendorDues').innerHTML=d.dues.map(v=>`<div class="list-row"><span>${esc(v.name)}</span><b>${money(v.due)}</b></div>`).join('')||'<div class="empty">No dues</div>';
 $('reportContent').innerHTML=`<div class="grid"><div class="card"><div class="metric-label">Income</div><div class="metric">${money(d.totalIn)}</div></div><div class="card"><div class="metric-label">Expenses</div><div class="metric">${money(d.totalOut)}</div></div><div class="card"><div class="metric-label">Vendor Dues</div><div class="metric">${money(d.duesTotal)}</div></div><div class="card"><div class="metric-label">Pending</div><div class="metric">${d.pending}</div></div></div><h2 style="margin-top:20px">Monthly Cashflow</h2>${table(d.monthly,['month','income','expense'])}`;
 $('staffTable').innerHTML=USER.role==='Super Admin'?table(DATA.users,['username','name','email','role','active']):'<div class="empty">Super Admin only</div>';
 $('staffNav').style.display=USER.role==='Super Admin'?'block':'none';
-$('headSelect').innerHTML=(DATA.heads||[]).map(h=>`<option>${esc(h)}</option>`).join('');
-document.querySelectorAll('input[type=date]').forEach(x=>{if(!x.value)x.value=today()});
-}
-function table(rows,cols){if(!rows||!rows.length)return '<div class="empty">No records yet</div>';return `<div class="table-wrap"><table><thead><tr>${cols.map(c=>`<th>${esc(c)}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>'<tr>'+cols.map(c=>{let v=r[c]??'';if(c==='Status')return `<td><span class="status ${esc(v)}">${esc(v)}</span></td>`;if(c==='Proof URL'&&v)return `<td><a href="${esc(v)}" target="_blank">Open proof</a></td>`;if(['Amount','income','expense','Opening Due'].includes(c))v=money(v);return `<td>${esc(v)}</td>`}).join('')+'</tr>').join('')}</tbody></table></div>`}
+$('headSelect').innerHTML=DATA.heads.map(h=>`<option>${esc(h)}</option>`).join('');
+document.querySelectorAll('input[type=date]').forEach(x=>{if(!x.value)x.value=today()});}
+function table(rows,cols){if(!rows||!rows.length)return '<div class="empty">No records yet</div>';return `<div class="table-wrap"><table><thead><tr>${cols.map(c=>`<th>${esc(c)}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>'<tr>'+cols.map(c=>{let v=r[c]??'';if(c==='Status')return `<td><span class="status ${esc(v)}">${esc(v)}</span></td>`;if(c==='Proof URL'&&v)return `<td><a href="${esc(v)}" target="_blank" rel="noopener">Open proof</a></td>`;if(['Amount','income','expense','Opening Due'].includes(c))v=money(v);return `<td>${esc(v)}</td>`}).join('')+'</tr>').join('')}</tbody></table></div>`}
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function formObj(form){return Object.fromEntries(new FormData(form).entries())}
-async function fileData(id){const f=$(id).files[0];if(!f)return null;if(f.size>5*1024*1024)throw new Error('File must be 5 MB or smaller');return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res({data:r.result,mime:f.type});r.onerror=rej;r.readAsDataURL(f)})}
-async function submitTransaction(e){e.preventDefault();try{let p=formObj(e.target);p.proof=await fileData('txProof');await call('saveTransaction',TOKEN,p);e.target.reset();await loadData();toast('Transaction submitted for approval')}catch(x){toast(x.message)}}
-async function submitRound(e){e.preventDefault();try{let p=formObj(e.target);p.proof=await fileData('roundProof');await call('saveDoctorRound',TOKEN,p);e.target.reset();await loadData();toast('Doctor round entry saved')}catch(x){toast(x.message)}}
-async function submitVendor(e){e.preventDefault();try{await call('addVendor',TOKEN,formObj(e.target));e.target.reset();await loadData();toast('Vendor added')}catch(x){toast(x.message)}}
-async function submitBill(e){e.preventDefault();try{let p=formObj(e.target);p.proof=await fileData('billProof');await call('addVendorBill',TOKEN,p);e.target.reset();await loadData();toast('Vendor bill saved')}catch(x){toast(x.message)}}
-async function submitPayment(e){e.preventDefault();try{let p=formObj(e.target);p.proof=await fileData('payProof');await call('payVendor',TOKEN,p);e.target.reset();await loadData();toast('Payment submitted for approval')}catch(x){toast(x.message)}}
-async function submitStaff(e){e.preventDefault();try{await call('addStaff',TOKEN,formObj(e.target));e.target.reset();await loadData();toast('Staff login created')}catch(x){toast(x.message)}}
-async function decide(type,id,decision){try{await call('approveRecord',TOKEN,type,id,decision);await loadData();toast('Record '+decision+'d')}catch(e){toast(e.message)}}
-async function changePassword(e){e.preventDefault();try{const p=formObj(e.target);await call('changeOwnPassword',TOKEN,p.oldPassword,p.newPassword);e.target.reset();toast('Password updated')}catch(x){toast(x.message)}}
-async function addHead(e){e.preventDefault();try{await call('addTransactionHead',TOKEN,$('newHead').value);$('newHead').value='';await loadData();toast('Transaction head added')}catch(x){toast(x.message)}}
+const formObj=f=>Object.fromEntries(new FormData(f).entries());
+async function act(e,fn,args,msg,reset=true){e.preventDefault();try{await call(fn,TOKEN,...args);if(reset)e.target.reset();await loadData();toast(msg)}catch(x){toast(x.message)}}
+const submitTransaction=async e=>{e.preventDefault();const p=formObj(e.target);try{p.proof=await fileData('txProof')}catch(x){return toast(x.message)}return act(e,'saveTransaction',[p],'Transaction submitted for approval')};
+const submitRound=async e=>{e.preventDefault();const p=formObj(e.target);try{p.proof=await fileData('roundProof')}catch(x){return toast(x.message)}return act(e,'saveDoctorRound',[p],'Doctor round entry saved')};
+const submitVendor=e=>act(e,'addVendor',[formObj(e.target)],'Vendor added');
+const submitBill=async e=>{e.preventDefault();const p=formObj(e.target);try{p.proof=await fileData('billProof')}catch(x){return toast(x.message)}return act(e,'addVendorBill',[p],'Vendor bill saved')};
+const submitPayment=async e=>{e.preventDefault();const p=formObj(e.target);try{p.proof=await fileData('payProof')}catch(x){return toast(x.message)}return act(e,'payVendor',[p],'Payment submitted for approval')};
+const submitStaff=e=>act(e,'addStaff',[formObj(e.target)],'Staff login created');
+const changePassword=e=>{const p=formObj(e.target);return act(e,'changeOwnPassword',[p.oldPassword,p.newPassword],'Password updated')};
+const addHead=e=>act(e,'addTransactionHead',[$('newHead').value],'Transaction head added',false).then(()=>$('newHead').value='');
+async function decide(type,id,d){try{await call('approveRecord',TOKEN,type,id,d);await loadData();toast('Record '+(d==='approve'?'approved':'rejected'))}catch(e){toast(e.message)}}
 $('loginPass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()});
 </script>
 </body>

@@ -31,12 +31,14 @@ table{width:100%;border-collapse:collapse;white-space:nowrap;font-size:12px}th,t
 .notice{padding:10px 12px;border-radius:9px;background:#eef4ff;color:#254c9c;margin-bottom:15px;font-size:12px}.toast{position:fixed;right:20px;bottom:20px;background:#17191d;color:#fff;padding:13px 17px;border-radius:10px;display:none;z-index:20;max-width:360px}
 @media(max-width:900px){.sidebar{width:75px;padding:15px 8px}.logo{font-size:0}.logo:before{content:'HF';font-size:20px}.logo small{display:none}.nav button{font-size:0;text-align:center}.nav button:before{content:attr(data-icon);font-size:17px}.side-bottom{display:none}.main{margin-left:75px;padding:18px}.grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:600px){.main{padding:13px}.grid{gap:8px}.card{padding:13px}.metric{font-size:20px}.content-grid{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.span2{grid-column:auto}}
+.busy button{opacity:.55;pointer-events:none}.busy,.busy *{cursor:progress}#bar{position:fixed;top:0;left:0;height:3px;width:0;background:#2563eb;z-index:30}.busy #bar{width:85%;transition:width 9s cubic-bezier(.1,.8,.2,1)}
 </style>
 </head>
 <body>
+<div id="bar"></div>
 <div id="loginScreen" class="login-wrap"><div class="login">
 <div class="brand">HOSPITAL FINANCE ERP</div><div class="sub">Secure finance operations workspace</div>
-<div class="notice">First-time login: <b>admin</b> / <b>ChangeMe123!</b> – change this password immediately.</div>
+
 <label>Username</label><input id="loginUser" value="admin" autocomplete="username">
 <label>Password</label><input id="loginPass" type="password" placeholder="Enter password" autocomplete="current-password">
 <div class="actions"><button class="blue" style="width:100%" onclick="doLogin()">Sign in</button></div>
@@ -133,22 +135,28 @@ table{width:100%;border-collapse:collapse;white-space:nowrap;font-size:12px}th,t
 let TOKEN='',USER=null,DATA=null;
 const $=id=>document.getElementById(id);
 const money=n=>'₹'+Number(n||0).toLocaleString('en-IN',{maximumFractionDigits:2});
-const today=()=>new Date().toISOString().slice(0,10);
+const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
 function toast(m){$('toast').textContent=m;$('toast').style.display='block';setTimeout(()=>$('toast').style.display='none',3500)}
 
 /* ---------- Backend connection ---------- */
 // If you redeploy Code.gs as a NEW deployment, paste the new Web app URL here.
 const API_URL='https://script.google.com/macros/s/AKfycbzXHBK3nmsj64LW88vHMtIOf4VqgLmeXuAOyCEE8qRWM3uXsdfm-YsfyAwzCokfZ5WzkQ/exec';
+let pending=0;
 async function call(fn,...args){
-  const res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({fn,args})});
-  const data=await res.json();
-  if(!data.ok)throw new Error(data.error);
-  return data.result;
+  pending++;document.body.classList.add('busy');
+  try{
+    let res;
+    try{res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({fn,args})})}
+    catch(e){throw new Error('Server se connect nahi ho paaya. Internet aur API_URL check karo.')}
+    const data=await res.json();
+    if(!data.ok)throw new Error(data.error);
+    return data.result;
+  }finally{if(--pending<=0){pending=0;document.body.classList.remove('busy')}}
 }
 async function fileData(id){const f=$(id).files[0];if(!f)return null;if(f.size>5*1024*1024)throw new Error('File must be 5 MB or smaller');return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res({data:r.result,mime:f.type});r.onerror=rej;r.readAsDataURL(f)})}
 
 /* ---------- UI ---------- */
-async function doLogin(){try{const r=await call('login',$('loginUser').value,$('loginPass').value);if(!r.ok)throw new Error(r.message);TOKEN=r.token;USER=r.user;await loadData();$('loginScreen').style.display='none';$('app').style.display='block';$('userChip').textContent=USER.name+' · '+USER.role;$('sideName').textContent=USER.name;$('sideRole').textContent=USER.role}catch(e){toast(e.message)}}
+async function doLogin(){try{const r=await call('login',$('loginUser').value,$('loginPass').value);if(!r.ok)throw new Error(r.message);TOKEN=r.token;USER=r.user;DATA=r.data;renderAll();$('loginScreen').style.display='none';$('app').style.display='block';$('userChip').textContent=USER.name+' · '+USER.role;$('sideName').textContent=USER.name;$('sideRole').textContent=USER.role}catch(e){toast(e.message)}}
 async function doLogout(){TOKEN='';USER=null;$('app').style.display='none';$('loginScreen').style.display='grid'}
 async function loadData(){try{DATA=await call('getBootstrap',TOKEN);renderAll()}catch(e){toast(e.message);if(String(e.message).includes('Session'))doLogout()}}
 function showSection(id,btn){document.querySelectorAll('.section').forEach(x=>x.classList.remove('active'));$(id).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');$('pageTitle').textContent=({dashboard:'Dashboard',transactions:'Transactions',approvals:'Approval Queue',rounds:'Doctor Round Fee',vendors:'Vendors & Dues',reports:'Finance Reports',staff:'Staff & Settings'})[id]}
@@ -174,7 +182,8 @@ document.querySelectorAll('input[type=date]').forEach(x=>{if(!x.value)x.value=to
 function table(rows,cols){if(!rows||!rows.length)return '<div class="empty">No records yet</div>';return `<div class="table-wrap"><table><thead><tr>${cols.map(c=>`<th>${esc(c)}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>'<tr>'+cols.map(c=>{let v=r[c]??'';if(c==='Status')return `<td><span class="status ${esc(v)}">${esc(v)}</span></td>`;if(c==='Proof URL'&&v)return `<td><a href="${esc(v)}" target="_blank" rel="noopener">Open proof</a></td>`;if(['Amount','income','expense','Opening Due'].includes(c))v=money(v);return `<td>${esc(v)}</td>`}).join('')+'</tr>').join('')}</tbody></table></div>`}
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 const formObj=f=>Object.fromEntries(new FormData(f).entries());
-async function act(e,fn,args,msg,reset=true){e.preventDefault();try{await call(fn,TOKEN,...args);if(reset)e.target.reset();await loadData();toast(msg)}catch(x){toast(x.message)}}
+function apply(r){if(r&&r.dashboard){DATA=r;renderAll()}else return loadData()}
+async function act(e,fn,args,msg,reset=true){e.preventDefault();const f=e.target;try{const r=await call(fn,TOKEN,...args);if(reset)f.reset();await apply(r);toast(msg)}catch(x){toast(x.message)}}
 const submitTransaction=async e=>{e.preventDefault();const p=formObj(e.target);try{p.proof=await fileData('txProof')}catch(x){return toast(x.message)}return act(e,'saveTransaction',[p],'Transaction submitted for approval')};
 const submitRound=async e=>{e.preventDefault();const p=formObj(e.target);try{p.proof=await fileData('roundProof')}catch(x){return toast(x.message)}return act(e,'saveDoctorRound',[p],'Doctor round entry saved')};
 const submitVendor=e=>act(e,'addVendor',[formObj(e.target)],'Vendor added');
@@ -183,7 +192,7 @@ const submitPayment=async e=>{e.preventDefault();const p=formObj(e.target);try{p
 const submitStaff=e=>act(e,'addStaff',[formObj(e.target)],'Staff login created');
 const changePassword=e=>{const p=formObj(e.target);return act(e,'changeOwnPassword',[p.oldPassword,p.newPassword],'Password updated')};
 const addHead=e=>act(e,'addTransactionHead',[$('newHead').value],'Transaction head added',false).then(()=>$('newHead').value='');
-async function decide(type,id,d){try{await call('approveRecord',TOKEN,type,id,d);await loadData();toast('Record '+(d==='approve'?'approved':'rejected'))}catch(e){toast(e.message)}}
+async function decide(type,id,d){try{apply(await call('approveRecord',TOKEN,type,id,d));toast('Record '+(d==='approve'?'approved':'rejected'))}catch(e){toast(e.message)}}
 $('loginPass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()});
 </script>
 </body>

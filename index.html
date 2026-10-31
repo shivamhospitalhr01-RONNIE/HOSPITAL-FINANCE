@@ -152,7 +152,18 @@ const $=id=>document.getElementById(id);
 const money=n=>'₹'+Number(n||0).toLocaleString('en-IN',{maximumFractionDigits:2});
 const today=()=>new Date().toISOString().slice(0,10);
 function toast(msg){$('toast').textContent=msg;$('toast').style.display='block';setTimeout(()=>$('toast').style.display='none',3500)}
-function call(fn,...args){return new Promise((resolve,reject)=>google.script.run.withSuccessHandler(resolve).withFailureHandler(e=>reject(new Error(e.message||e)))[fn](...args))}
+const API_URL = 'https://script.google.com/macros/s/AKfycbxtJAfPGzqV7V9mRlfjHf1ayaAylwL9SaQARWSjSJzi7EkX-HFf7q9pEIWTv3c_tPzTaA/exec';
+
+async function call(fn, ...args) {
+  const res = await fetch(API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify({ fn, args })
+  });
+  const data = await res.json();
+  if (!data.ok) throw new Error(data.error);
+  return data.result;
+}
 async function doLogin(){try{const r=await call('login',$('loginUser').value,$('loginPass').value);if(!r.ok)throw new Error(r.message);TOKEN=r.token;USER=r.user;await loadData();$('loginScreen').style.display='none';$('app').style.display='block';$('userChip').textContent=USER.name+' · '+USER.role;$('sideName').textContent=USER.name;$('sideRole').textContent=USER.role;if(USER.role!=='Super Admin')$('staffNav').style.display='none';}catch(e){toast(e.message)}}
 async function doLogout(){try{await call('logout',TOKEN)}catch(e){}TOKEN='';USER=null;$('app').style.display='none';$('loginScreen').style.display='grid'}
 async function loadData(){try{DATA=await call('getBootstrap',TOKEN);renderAll()}catch(e){toast(e.message);if(String(e.message).includes('Session'))doLogout()}}

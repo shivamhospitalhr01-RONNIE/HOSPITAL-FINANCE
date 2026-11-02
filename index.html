@@ -2,308 +2,324 @@
 <html>
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Hospital Finance ERP</title>
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <style>
-:root{--bg:#f4f5f7;--panel:#fff;--ink:#17191d;--muted:#737984;--line:#e5e7eb;--dark:#17191d;--accent:#2563eb}
+:root{--bg:#f4f5f7;--ink:#17191d;--muted:#737984;--line:#e5e7eb;--dark:#17191d;--accent:#2563eb}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px Inter,Arial,sans-serif}
 button,input,select,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:9px;padding:10px 14px;background:var(--dark);color:#fff}
-button.secondary{background:#eceef1;color:#222}button.blue{background:var(--accent)}
-.login-wrap{min-height:100vh;display:grid;place-items:center;padding:20px}.login{width:min(420px,100%);background:#fff;padding:30px;border:1px solid var(--line);border-radius:18px}
-.brand{font-size:22px;font-weight:800}.sub{color:var(--muted);margin:7px 0 22px}
+button.secondary{background:#eceef1;color:#222}button.blue{background:var(--accent)}button.sm{padding:5px 9px;font-size:11px}button:disabled{opacity:.5}
 label{display:block;font-size:12px;font-weight:700;color:#4b515b;margin:12px 0 6px}
-input,select,textarea{width:100%;border:1px solid #dfe2e7;border-radius:9px;padding:11px;background:#fff;color:#17191d;outline:none}textarea{min-height:70px;resize:vertical}
-.app{display:none;min-height:100vh}.sidebar{width:245px;background:#17191d;color:#fff;position:fixed;inset:0 auto 0 0;padding:22px 14px;display:flex;flex-direction:column;z-index:4}
-.logo{font-size:18px;font-weight:800;padding:5px 10px 24px}.logo small{display:block;color:#aeb4be;font-size:10px;font-weight:500;margin-top:5px;letter-spacing:1px}
-.nav{display:grid;gap:5px}.nav button{background:transparent;text-align:left;color:#c8cbd1;padding:12px}.nav button.active,.nav button:hover{background:#30343b;color:#fff}
-.side-bottom{margin-top:auto;color:#aeb4be;font-size:12px;padding:12px}
-.main{margin-left:245px;padding:26px;max-width:1600px}.top{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:24px}
-h1{font-size:24px;margin:0}h2{font-size:17px;margin:0 0 16px}.muted{color:var(--muted)}.user-chip{background:#fff;border:1px solid var(--line);border-radius:30px;padding:9px 13px}
-.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;min-width:0}
-.metric-label{color:var(--muted);font-size:12px}.metric{font-size:25px;font-weight:800;margin-top:9px}.metric-note{font-size:11px;color:var(--muted);margin-top:5px}
-.content-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:14px;margin-top:14px}.section{display:none}.section.active{display:block}
-.panel-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:15px}.table-wrap{overflow:auto}
-table{width:100%;border-collapse:collapse;white-space:nowrap;font-size:12px}th,td{text-align:left;padding:11px 9px;border-bottom:1px solid var(--line)}th{color:#6c727c;font-size:11px;background:#fafafa}
-.status{display:inline-block;border-radius:30px;padding:5px 8px;background:#fff3d8;color:#8a5a00;font-size:10px;font-weight:700}.status.Approved{background:#e3f7ed;color:#087747}.status.Rejected{background:#ffe7e7;color:#a83232}
-.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 14px}.span2{grid-column:span 2}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
-.chart{height:190px;display:flex;align-items:end;gap:12px;padding:18px 5px 0}.bar-group{flex:1;display:flex;flex-direction:column;align-items:center;gap:7px;height:100%;justify-content:end}.bar-pair{height:145px;display:flex;align-items:end;gap:4px}.bar{width:15px;min-height:2px;border-radius:5px 5px 0 0;background:#272b33}.bar.exp{background:#9ca3af}.bar-label{font-size:10px;color:var(--muted)}
-.list{display:grid;gap:10px}.list-row{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}.empty{padding:25px;text-align:center;color:var(--muted)}
-.notice{padding:10px 12px;border-radius:9px;background:#eef4ff;color:#254c9c;margin-bottom:15px;font-size:12px}.toast{position:fixed;right:20px;bottom:20px;background:#17191d;color:#fff;padding:13px 17px;border-radius:10px;display:none;z-index:20;max-width:360px}
-@media(max-width:900px){.sidebar{width:75px;padding:15px 8px}.logo{font-size:0}.logo:before{content:'HF';font-size:20px}.logo small{display:none}.nav button{font-size:0;text-align:center}.nav button:before{content:attr(data-icon);font-size:17px}.side-bottom{display:none}.main{margin-left:75px;padding:18px}.grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:600px){.main{padding:13px}.grid{gap:8px}.card{padding:13px}.metric{font-size:20px}.content-grid{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.span2{grid-column:auto}}
-.busy button{opacity:.55;pointer-events:none}.busy,.busy *{cursor:progress}#bar{position:fixed;top:0;left:0;height:3px;width:0;background:#2563eb;z-index:30}.busy #bar{width:85%;transition:width 9s cubic-bezier(.1,.8,.2,1)}
-.status.Paid,.status.Active,.status.Billed{background:#e3f7ed;color:#087747}.status.Unpaid,.status.Inactive{background:#ffe7e7;color:#a83232}
+input,select,textarea{width:100%;border:1px solid #dfe2e7;border-radius:9px;padding:9px;background:#fff;outline:none}textarea{min-height:60px}
+.login-wrap{min-height:100vh;display:grid;place-items:center;padding:20px}.login{width:min(420px,100%);background:#fff;padding:30px;border:1px solid var(--line);border-radius:18px}
+.brand{font-size:22px;font-weight:800}.sub,.muted{color:var(--muted)}.sub{margin:7px 0 18px}
+.app{display:none}.sidebar{width:230px;background:#17191d;color:#fff;position:fixed;inset:0 auto 0 0;padding:20px 12px;display:flex;flex-direction:column;z-index:4}
+.logo{font-size:17px;font-weight:800;padding:5px 10px 20px}.nav{display:grid;gap:4px}.nav button{background:transparent;text-align:left;color:#c8cbd1;padding:11px;border-radius:9px}.nav button.active,.nav button:hover{background:#30343b;color:#fff}
+.side-bottom{margin-top:auto;color:#aeb4be;font-size:12px;padding:10px}
+.main{margin-left:230px;padding:24px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+h1{font-size:23px;margin:0}h2{font-size:16px;margin:0 0 14px}.user-chip{background:#fff;border:1px solid var(--line);border-radius:30px;padding:8px 13px}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;min-width:0;margin-bottom:12px}
+.metric-label{color:var(--muted);font-size:12px}.metric{font-size:23px;font-weight:800;margin-top:7px}.note{font-size:11px;color:var(--muted);margin-top:4px}
+.two{display:grid;grid-template-columns:1.2fr 1fr;gap:12px}.section{display:none}.section.active{display:block}
+.panel-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}.table-wrap{overflow:auto}
+table{width:100%;border-collapse:collapse;white-space:nowrap;font-size:12px}th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line)}th{color:#6c727c;font-size:11px;background:#fafafa}
+td input,td select{min-width:90px;padding:7px}
+.status{border-radius:30px;padding:4px 8px;background:#fff3d8;color:#8a5a00;font-size:10px;font-weight:700}.status.Approved,.status.Paid{background:#e3f7ed;color:#087747}.status.Rejected{background:#ffe7e7;color:#a83232}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 14px}.span2{grid-column:span 2}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin-bottom:12px;align-items:end}.filters label{margin:0 0 3px}
+.cat{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.cat button{padding:18px;font-weight:700;background:#fff;color:var(--ink);border:1px solid var(--line)}.cat button:hover{border-color:var(--accent);color:var(--accent)}
+.chart{height:180px;display:flex;align-items:end;gap:8px;padding-top:14px}.bg{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:end}.bp{height:140px;display:flex;align-items:end;gap:3px}.bar{width:12px;min-height:2px;border-radius:4px 4px 0 0;background:#272b33}.bar.e{background:#9ca3af}.bl{font-size:9px;color:var(--muted)}
+.row{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}.hb{height:7px;background:var(--accent);border-radius:4px;margin-top:5px}.empty{padding:22px;text-align:center;color:var(--muted)}
+.notice{padding:10px;border-radius:9px;background:#eef4ff;color:#254c9c;margin-bottom:12px;font-size:12px}.toast{position:fixed;right:18px;bottom:18px;background:#17191d;color:#fff;padding:12px 16px;border-radius:10px;display:none;z-index:30;max-width:340px}
+#modal{display:none;position:fixed;inset:0;background:#0008;z-index:20;place-items:center;padding:12px}.mbox{background:#fff;border-radius:16px;padding:20px;width:min(1100px,100%);max-height:92vh;overflow:auto}
+@media(max-width:900px){.sidebar{position:static;width:auto;flex-direction:row;overflow:auto;padding:8px}.logo,.side-bottom{display:none}.nav{display:flex}.nav button{white-space:nowrap}.main{margin:0;padding:14px}.grid{grid-template-columns:1fr 1fr}.two{grid-template-columns:1fr}.cat{grid-template-columns:1fr 1fr}.form-grid{grid-template-columns:1fr}.span2{grid-column:auto}}
 </style>
 </head>
 <body>
-<div id="bar"></div>
 <div id="loginScreen" class="login-wrap"><div class="login">
-<div class="brand">HOSPITAL FINANCE ERP</div><div class="sub">Secure finance operations workspace</div>
-
-<label>Username</label><input id="loginUser" value="admin" autocomplete="username">
-<label>Password</label><input id="loginPass" type="password" placeholder="Enter password" autocomplete="current-password">
-<div class="actions"><button class="blue" style="width:100%" onclick="doLogin()">Sign in</button></div>
+  <div class="brand">HOSPITAL FINANCE ERP</div><div class="sub">Secure finance operations workspace</div>
+  <label>Username</label><input id="loginUser" autocomplete="username">
+  <label>Password</label><input id="loginPass" type="password" autocomplete="current-password">
+  <div class="actions"><button class="blue" style="width:100%" onclick="doLogin()">Sign in</button></div>
 </div></div>
-
+ 
 <div id="app" class="app">
-<aside class="sidebar">
-<div class="logo">HOSPITAL FINANCE<small>ERP WORKSPACE</small></div>
-<nav class="nav">
-<button class="active" data-icon="▦" onclick="showSection('dashboard',this)">▦ &nbsp; Dashboard</button>
-<button data-icon="＋" onclick="showSection('transactions',this)">＋ &nbsp; Transactions</button>
-<button data-icon="◷" onclick="showSection('approvals',this)">◷ &nbsp; Approvals</button>
-<button data-icon="✚" onclick="showSection('rounds',this)">✚ &nbsp; Doctor Rounds</button>
-<button data-icon="☻" onclick="showSection('employees',this)">☻ &nbsp; Employees</button>
-<button data-icon="₹" onclick="showSection('docpay',this)">₹ &nbsp; Doctor Payments</button>
-<button data-icon="▤" onclick="showSection('vendors',this)">▤ &nbsp; Vendors &amp; Dues</button>
-<button data-icon="▥" onclick="showSection('reports',this)">▥ &nbsp; Reports</button>
-<button id="staffNav" data-icon="♙" onclick="showSection('staff',this)">♙ &nbsp; Staff &amp; Settings</button>
-</nav>
-<div class="side-bottom"><div id="sideName"></div><div id="sideRole"></div><button class="secondary" style="margin-top:12px;width:100%" onclick="doLogout()">Sign out</button></div>
-</aside>
+<aside class="sidebar"><div class="logo">HOSPITAL FINANCE</div><nav class="nav" id="nav"></nav>
+<div class="side-bottom"><div id="sideName"></div><div id="sideRole"></div><button class="secondary" style="margin-top:10px;width:100%" onclick="doLogout()">Sign out</button></div></aside>
 <main class="main">
-<div class="top"><div><div class="muted" style="font-size:11px;margin-bottom:5px">HOSPITAL FINANCE / WORKSPACE</div><h1 id="pageTitle">Dashboard</h1></div><div class="user-chip" id="userChip">User</div></div>
-
+<div class="top"><h1 id="pageTitle">Dashboard</h1><div class="user-chip" id="userChip"></div></div>
+ 
 <section id="dashboard" class="section active">
-<div class="grid">
-<div class="card"><div class="metric-label">Approved Income</div><div class="metric" id="mIncome"></div><div class="metric-note">Approved entries</div></div>
-<div class="card"><div class="metric-label">Approved Expenses</div><div class="metric" id="mExpense"></div><div class="metric-note">Approved outflow</div></div>
-<div class="card"><div class="metric-label">Net Position</div><div class="metric" id="mNet"></div><div class="metric-note">Income minus expenses</div></div>
-<div class="card"><div class="metric-label">Pending Approvals</div><div class="metric" id="mPending"></div><div class="metric-note">Awaiting review</div></div>
-</div>
-<div class="content-grid">
-<div class="card"><div class="panel-head"><h2>Monthly Cashflow</h2></div><div id="cashChart" class="chart"></div><div class="muted" style="font-size:11px">Black = income · Grey = expense</div></div>
-<div class="card"><div class="panel-head"><h2>Vendor Outstanding</h2><span class="muted" id="duesTotal"></span></div><div id="duesPreview" class="list"></div></div>
-</div>
-<div class="card" style="margin-top:14px"><div class="panel-head"><h2>Recent Transactions</h2><button class="secondary" onclick="showSection('transactions')">View all</button></div><div id="recentTable"></div></div>
+  <div class="grid" id="dCards"></div>
+  <div class="two"><div class="card"><h2>Monthly cashflow</h2><div id="cashChart" class="chart"></div><div class="note">Dark = income, grey = expense (last 12 months)</div></div>
+  <div class="card"><h2>This month's expense by category</h2><div id="dCat"></div></div></div>
+  <div class="two"><div class="card"><h2>Top expense heads (this month)</h2><div id="dHeads"></div></div>
+  <div class="card"><div class="panel-head"><h2>Vendor outstanding</h2><b id="duesTotal"></b></div><div id="duesPreview"></div></div></div>
+  <div class="card"><h2>Recent transactions</h2><div id="recentTable"></div></div>
 </section>
-
+ 
 <section id="transactions" class="section">
-<div class="card"><h2>Create Transaction</h2>
-<form onsubmit="submitTransaction(event)"><div class="form-grid">
-<div><label>Transaction Type</label><select name="type"><option value="Income">Income / Collection</option><option value="Expense">Expense / Payment</option></select></div>
-<div><label>Date</label><input name="date" type="date" required></div>
-<div><label>Head</label><select name="head" id="headSelect"></select></div>
-<div><label>Amount (₹)</label><input name="amount" type="number" min="0.01" step="0.01" required></div>
-<div><label>Payment Mode</label><select name="mode"><option>Cash</option><option>Online</option><option>RTGS</option><option>UPI</option><option>Cheque</option><option>Other</option></select></div>
-<div><label>Reference / UTR</label><input name="reference" placeholder="Optional"></div>
-<div class="span2"><label>Description / Remarks</label><textarea name="description"></textarea></div>
-<div class="span2"><label>Upload receipt / proof (JPG, PNG, WEBP, PDF; max 5 MB)</label><input id="txProof" type="file" accept="image/jpeg,image/png,image/webp,application/pdf"></div>
-</div><div class="actions"><button class="blue">Submit for approval</button><button type="reset" class="secondary">Clear</button></div></form></div>
-<div class="card" style="margin-top:14px"><h2>Transaction Register</h2><div id="txTable"></div></div>
+  <div class="card"><h2>New voucher</h2><div class="cat">
+    <button onclick="openVoucher('Purchasing')">Purchasing</button><button onclick="openVoucher('Extra Duty')">Extra Duty</button>
+    <button onclick="openVoucher('Salary Advance')">Salary Advance</button><button onclick="openVoucher('Doctor Pay')">Doctor Pay</button></div></div>
+  <div class="card"><h2>Voucher history</h2>
+    <div class="filters">
+      <div><label>Category</label><select id="fCat"><option value="">All</option><option>Purchasing</option><option>Extra Duty</option><option>Salary Advance</option><option>Doctor Pay</option></select></div>
+      <div><label>From</label><input id="fFrom" type="date"></div><div><label>To</label><input id="fTo" type="date"></div>
+      <div><label>Head</label><input id="fHead" placeholder="exact head"></div>
+      <div><label>Status</label><select id="fSt"><option value="">All</option><option>Pending</option><option>Approved</option><option>Rejected</option></select></div>
+      <div><label>Search</label><input id="fQ"></div><button class="blue" onclick="loadVH()">Search</button><button class="secondary" onclick="printV()">Print voucher</button></div>
+    <div id="vhSum"></div><div id="vhTable"></div></div>
+  <div class="card"><h2>Income / expense entry</h2>
+    <form id="txForm" onsubmit="submitTx(event)"><div class="form-grid">
+      <div><label>Type</label><select name="type"><option value="Income">Income / Collection</option><option value="Expense">Expense / Payment</option></select></div>
+      <div><label>Date</label><input name="date" type="date" required></div>
+      <div><label>Head</label><select name="head" id="headSelect"></select></div><div><label>Amount (₹)</label><input name="amount" type="number" min="0.01" step="0.01" required></div>
+      <div><label>Payment mode</label><select name="mode"><option>Cash</option><option>Online</option><option>RTGS</option><option>UPI</option><option>Cheque</option><option>Other</option></select></div><div><label>Reference / UTR</label><input name="reference"></div>
+      <div class="span2"><label>Description</label><textarea name="description"></textarea></div>
+      <div class="span2"><label>Receipt / proof (max 5 MB)</label><input id="txProof" type="file" accept="image/jpeg,image/png,image/webp,application/pdf"></div>
+    </div><div class="actions"><button class="blue">Submit for approval</button></div></form></div>
+  <div class="card"><h2>Transaction register</h2><div id="txTable"></div></div>
 </section>
-
-<section id="approvals" class="section"><div class="card"><div class="panel-head"><h2>Approval Queue</h2><span class="muted">Supervisor / Super Admin</span></div><div id="approvalTable"></div></div></section>
-
+ 
+<section id="approvals" class="section"><div class="card"><h2>Approval queue</h2><div id="approvalTable"></div></div></section>
+ 
 <section id="rounds" class="section">
-<div class="card"><h2>Doctor Round Entry (OPD / IPD)</h2>
-<form onsubmit="submitRound(event)"><div class="form-grid">
-<div><label>Date</label><input name="date" type="date" required></div>
-<div><label>Voucher No (blank = auto)</label><input name="voucher"></div>
-<div><label>Round Type</label><select name="roundType"><option>OPD</option><option>IPD</option></select></div>
-<div><label>Doctor Name</label><input name="doctor" required></div>
-<div><label>Patient Name</label><input name="patientName"></div>
-<div><label>Department / Ward</label><input name="patient"></div>
-<div class="span2"><label>Treatment Details</label><textarea name="treatment"></textarea></div>
-<div><label>Fee Amount (₹)</label><input name="amount" type="number" min="0.01" step="0.01" required></div>
-<div><label>Paid Now (₹)</label><input name="paidAmount" type="number" min="0" step="0.01" value="0"></div>
-<div><label>Payment Mode</label><select name="mode"><option>Cash</option><option>Online</option><option>RTGS</option><option>UPI</option><option>Cheque</option><option>Other</option></select></div>
-<div><label>Reference / UTR</label><input name="reference"></div>
-<div class="span2"><label>Receipt / Proof</label><input id="roundProof" type="file" accept="image/jpeg,image/png,image/webp,application/pdf"></div>
-</div><div class="actions"><button class="blue">Save Round Entry</button></div></form></div>
-<div class="card" style="margin-top:14px"><div class="panel-head"><h2>Search &amp; Reports</h2><div class="actions" style="margin:0"><button class="secondary" onclick="exportRounds()">Export CSV</button><button class="secondary" onclick="window.print()">Print</button></div></div>
-<form id="roundFilter" onsubmit="event.preventDefault();runRoundReport()"><div class="form-grid">
-<div><label>From</label><input name="from" type="date" data-keep></div><div><label>To</label><input name="to" type="date" data-keep></div>
-<div><label>Doctor</label><input name="doctor"></div>
-<div><label>Type</label><select name="roundType"><option value="">All</option><option>OPD</option><option>IPD</option></select></div>
-<div><label>Payment Status</label><select name="payStatus"><option value="">All</option><option>Unpaid</option><option>Partial</option><option>Paid</option></select></div>
-<div><label>Search (voucher, patient, treatment…)</label><input name="q"></div>
-</div><div class="actions"><button class="blue">Search</button><button type="button" class="secondary" onclick="document.getElementById('roundFilter').reset();runRoundReport()">Reset</button></div></form>
-<div id="roundSummary" class="grid" style="margin-top:14px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))"></div>
-<h2 style="margin-top:18px">By Doctor</h2><div id="roundByDoc"></div>
-<h2 style="margin-top:18px">Round Register</h2><div id="roundTable"></div></div>
+  <div class="card"><h2>Doctor round fee entry</h2><form id="roundForm" onsubmit="submitRound(event)"><div class="form-grid">
+    <div><label>Date</label><input name="date" type="date" required></div><div><label>Doctor name</label><input name="doctor" required></div>
+    <div><label>Round type</label><select name="roundType"><option>OPD</option><option>IPD</option></select></div><div><label>Patient name</label><input name="patientName"></div>
+    <div><label>Treatment</label><input name="treatment"></div><div><label>Voucher no (blank = auto)</label><input name="voucher"></div>
+    <div><label>Fee (₹)</label><input name="amount" type="number" min="0.01" step="0.01" required></div><div><label>Paid now (₹)</label><input name="paidAmount" type="number" min="0" step="0.01" placeholder="blank = full"></div>
+    <div><label>Payment mode</label><select name="mode"><option>Cash</option><option>Online</option><option>RTGS</option><option>UPI</option><option>Other</option></select></div><div><label>Reference</label><input name="reference"></div>
+    <div class="span2"><label>Proof</label><input id="roundProof" type="file" accept="image/*,application/pdf"></div>
+  </div><div class="actions"><button class="blue">Save round entry</button></div></form></div>
+  <div class="card"><h2>Doctor round register</h2><div id="roundTable"></div></div>
 </section>
-
+ 
 <section id="vendors" class="section">
-<div class="grid" style="grid-template-columns:repeat(2,minmax(0,1fr))">
-<div class="card"><h2>Add Vendor</h2><form onsubmit="submitVendor(event)">
-<label>Vendor Name</label><input name="name" required><label>Contact</label><input name="contact"><label>Category</label><input name="category"><label>Opening Due (₹)</label><input name="openingDue" type="number" min="0" step="0.01" value="0"><div class="actions"><button class="blue">Add Vendor</button></div></form></div>
-<div class="card"><h2>Record Vendor Bill</h2><form onsubmit="submitBill(event)">
-<label>Vendor</label><select name="vendorId" id="billVendor" required></select><label>Bill Date</label><input name="billDate" type="date" required><label>Bill Number</label><input name="billNumber"><label>Amount (₹)</label><input name="amount" type="number" min="0.01" step="0.01" required><label>Bill Image / PDF</label><input id="billProof" type="file" accept="image/*,application/pdf"><div class="actions"><button class="blue">Save Bill</button></div></form></div>
-<div class="card"><h2>Vendor Payment</h2><form onsubmit="submitPayment(event)">
-<label>Vendor</label><select name="vendorId" id="payVendor" required></select><label>Payment Date</label><input name="date" type="date" required><label>Amount (₹)</label><input name="amount" type="number" min="0.01" step="0.01" required><label>Mode</label><select name="mode"><option>Cash</option><option>Online</option><option>RTGS</option><option>UPI</option><option>Cheque</option></select><label>Payment Proof</label><input id="payProof" type="file" accept="image/*,application/pdf"><div class="actions"><button class="blue">Submit Payment</button></div></form></div>
-<div class="card"><h2>Pending Vendor Dues</h2><div id="vendorDues"></div></div>
-</div>
-<div class="card" style="margin-top:14px"><div class="panel-head"><h2>Vendor Ledger</h2><div class="actions" style="margin:0"><select id="ledVendor" style="min-width:220px;width:auto"></select><button class="blue" onclick="loadLedger()">Show</button><button class="secondary" onclick="window.print()">Print</button></div></div><div id="ledSum" class="grid" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr))"></div><div id="ledTable" style="margin-top:14px"></div></div>
-<div class="card" style="margin-top:14px"><h2>Purchase Bills</h2><div id="billTable"></div></div>
-<div class="card" style="margin-top:14px"><h2>Vendor Master</h2><div id="vendorTable"></div></div>
+  <div class="grid" style="grid-template-columns:repeat(2,minmax(0,1fr))">
+    <div class="card"><h2>Add vendor</h2><form onsubmit="submitVendor(event)"><label>Name</label><input name="name" required><label>Contact</label><input name="contact"><label>Category</label><input name="category"><label>Opening due (₹)</label><input name="openingDue" type="number" min="0" step="0.01" value="0"><label>Notes</label><textarea name="notes"></textarea><div class="actions"><button class="blue">Add vendor</button></div></form></div>
+    <div class="card"><h2>Record vendor bill</h2><form onsubmit="submitBill(event)"><label>Vendor</label><select name="vendorId" id="billVendor" required></select><label>Bill date</label><input name="billDate" type="date" required><label>Bill number</label><input name="billNumber"><label>Amount (₹)</label><input name="amount" type="number" min="0.01" step="0.01" required><label>Description</label><textarea name="description"></textarea><div class="actions"><button class="blue">Save bill</button></div></form></div>
+    <div class="card"><h2>Vendor payment</h2><form onsubmit="submitPay(event)"><label>Vendor</label><select name="vendorId" id="payVendor" required></select><label>Date</label><input name="date" type="date" required><label>Amount (₹)</label><input name="amount" type="number" min="0.01" step="0.01" required><label>Mode</label><select name="mode"><option>Cash</option><option>Online</option><option>RTGS</option><option>UPI</option><option>Cheque</option></select><label>UTR / reference</label><input name="reference"><div class="actions"><button class="blue">Submit payment</button></div></form></div>
+    <div class="card"><h2>Pending vendor dues</h2><div id="vendorDues"></div></div>
+  </div>
+  <div class="card"><h2>Vendor master</h2><div id="vendorTable"></div></div>
+  <div class="card"><h2>Bills</h2><div id="billTable"></div></div>
 </section>
-
+ 
 <section id="employees" class="section">
-<div id="empTxSum" class="grid" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr))"></div>
-<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr));margin-top:14px">
-<div class="card"><h2>Employee Transaction</h2><form id="empTxForm" onsubmit="submitEmpTx(event)">
-<label>Employee</label><select name="empId" id="etEmp" required onchange="fillPayroll()"></select>
-<label>Category</label><select name="category" onchange="fillPayroll()"><option>Purchasing</option><option>Extra Duty</option><option>Salary Advance</option><option>Monthly Payroll</option></select>
-<label>Date</label><input name="date" type="date" required>
-<label>Payroll Month (for Monthly Payroll)</label><input name="month" id="etMonth" type="month">
-<label>Amount (₹)</label><input name="amount" type="number" min="0.01" step="0.01" required>
-<label>Payment Mode</label><select name="mode"><option>Cash</option><option>Online</option><option>RTGS</option><option>UPI</option><option>Cheque</option><option>Other</option></select>
-<label>Description</label><textarea name="description"></textarea>
-<div class="actions"><button class="blue">Submit for approval</button></div></form></div>
-<div class="card" id="empAddCard"><h2>Add Employee</h2><form onsubmit="submitEmp(event)">
-<label>Name</label><input name="name" required><label>Designation</label><input name="designation"><label>Department</label><input name="department">
-<label>Phone</label><input name="phone"><label>Joining Date</label><input name="joining" type="date"><label>Monthly Salary (₹)</label><input name="salary" type="number" min="0" step="0.01" value="0">
-<label>Notes</label><textarea name="notes"></textarea><div class="actions"><button class="blue">Add Employee</button></div></form></div>
-</div>
-<div class="card" id="empEditCard" style="display:none;margin-top:14px"><h2>Edit Employee (Admin only)</h2><form id="empEditForm" onsubmit="submitEmpEdit(event)"><input type="hidden" name="id"><div class="form-grid">
-<div><label>Name</label><input name="name" required></div><div><label>Designation</label><input name="designation"></div>
-<div><label>Department</label><input name="department"></div><div><label>Phone</label><input name="phone"></div>
-<div><label>Joining Date</label><input name="joining" type="date" data-keep></div><div><label>Monthly Salary (₹)</label><input name="salary" type="number" min="0" step="0.01"></div>
-<div><label>Status</label><select name="status"><option>Active</option><option>Inactive</option></select></div><div><label>Notes</label><input name="notes"></div>
-</div><div class="actions"><button class="blue">Save changes</button><button type="button" class="secondary" onclick="document.getElementById('empEditCard').style.display='none'">Cancel</button></div></form></div>
-<div class="card" style="margin-top:14px"><h2>Employees</h2><div id="empTable"></div></div>
-<div class="card" style="margin-top:14px"><div class="panel-head"><h2>Employee Transaction Register</h2><input id="empQ" placeholder="Search…" style="max-width:240px" oninput="renderEmpTx()"></div><div id="empTxTable"></div></div>
+  <div class="card" id="empAdd"><h2>Add employee</h2><form onsubmit="submitEmp(event)"><div class="form-grid">
+    <div><label>Name</label><input name="name" required></div><div><label>Designation</label><input name="designation"></div>
+    <div><label>Department</label><input name="department"></div><div><label>Phone</label><input name="phone"></div>
+    <div><label>Joining date</label><input name="joining" type="date"></div><div><label>Monthly salary (₹)</label><input name="salary" type="number" min="0" step="0.01"></div>
+    <div><label>Working hours</label><input name="hours" placeholder="e.g. 9am–6pm"></div><div><label>Notes</label><input name="notes"></div>
+  </div><div class="actions"><button class="blue">Add employee</button></div></form></div>
+  <div class="card"><div class="panel-head"><h2>Employee details</h2><div style="display:flex;gap:8px;align-items:center"><span class="muted">Month</span><input id="empMonth" type="month" style="width:auto" onchange="loadEmp()"></div></div>
+    <div class="note" style="margin-bottom:8px">Total advance counts all advances ever taken. Extra duty and month advance follow the month filter.</div><div id="empTable"></div></div>
 </section>
-
-<section id="docpay" class="section">
-<div id="docPaySum" class="grid" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr))"></div>
-<div class="card" style="margin-top:14px"><h2>Doctor Payment Entry</h2><form onsubmit="submitDocPay(event)"><div class="form-grid">
-<div><label>Date</label><input name="date" type="date" required></div><div><label>Doctor Name</label><input name="doctor" required></div>
-<div><label>Payment Type</label><select name="type"><option>OPD</option><option>On-Call</option></select></div><div><label>Amount (₹)</label><input name="amount" type="number" min="0.01" step="0.01" required></div>
-<div><label>Payment Mode</label><select name="mode"><option>Cash</option><option>Online</option><option>RTGS</option><option>UPI</option><option>Cheque</option><option>Other</option></select></div><div><label>Reference / UTR</label><input name="reference"></div>
-<div class="span2"><label>Description</label><textarea name="description"></textarea></div>
-</div><div class="actions"><button class="blue">Submit for approval</button></div></form></div>
-<div class="card" style="margin-top:14px"><div class="panel-head"><h2>Doctor Payment Register</h2><input id="dpQ" placeholder="Search…" style="max-width:240px" oninput="renderDocPay()"></div><div id="docPayTable"></div></div>
-</section>
-
-<section id="reports" class="section"><div class="card"><div class="panel-head"><h2>Finance Summary</h2><button class="secondary" onclick="loadData()">Refresh</button></div><div id="reportContent"></div></div></section>
-
+ 
+<section id="reports" class="section"><div class="card"><div class="panel-head"><h2>Finance summary</h2><button class="secondary" onclick="refresh()">Refresh</button></div><div id="reportContent"></div></div></section>
+ 
 <section id="staff" class="section">
-<div class="grid" style="grid-template-columns:repeat(2,minmax(0,1fr))">
-<div class="card"><h2>Create Staff Login</h2><form onsubmit="submitStaff(event)">
-<label>Username</label><input name="username" required><label>Full Name</label><input name="name" required><label>Email</label><input name="email" type="email"><label>Role</label><select name="role"><option>Employee</option><option>Supervisor</option><option>Super Admin</option></select><label>Temporary Password</label><input name="password" type="password" minlength="8" required><div class="actions"><button class="blue">Create Login</button></div></form></div>
-<div class="card"><h2>Change My Password</h2><form onsubmit="changePassword(event)">
-<label>Current Password</label><input name="oldPassword" type="password" required><label>New Password (min 8)</label><input name="newPassword" type="password" minlength="8" required><div class="actions"><button class="blue">Update Password</button></div></form>
-<hr style="border:0;border-top:1px solid var(--line);margin:20px 0"><h2>Add Transaction Head</h2><form onsubmit="addHead(event)"><label>New Head Name</label><input id="newHead" required><div class="actions"><button class="secondary">Add Head</button></div></form></div>
-</div>
-<div class="card" style="margin-top:14px"><h2>Staff Accounts</h2><div id="staffTable"></div></div>
+  <div class="grid" style="grid-template-columns:repeat(2,minmax(0,1fr))">
+    <div class="card"><h2>Create staff login</h2><form onsubmit="submitStaff(event)"><label>Username</label><input name="username" required><label>Full name</label><input name="name" required><label>Email</label><input name="email" type="email"><label>Role</label><select name="role"><option>Employee</option><option>Supervisor</option><option>Super Admin</option></select><label>Temporary password</label><input name="password" type="password" minlength="8" required><div class="actions"><button class="blue">Create login</button></div></form></div>
+    <div class="card"><h2>Change my password</h2><form onsubmit="changePw(event)"><label>Current password</label><input name="oldPassword" type="password" required><label>New password (min 8)</label><input name="newPassword" type="password" minlength="8" required><div class="actions"><button class="blue">Update password</button></div></form>
+    <h2 style="margin-top:22px">Add transaction head</h2><form onsubmit="addHead(event)"><input id="newHead" required><div class="actions"><button class="secondary">Add head</button></div></form></div>
+  </div>
+  <div class="card"><h2>Staff accounts</h2><div id="staffTable"></div></div>
 </section>
 </main></div>
+ 
+<div id="modal"><div class="mbox" id="mbox"></div></div>
 <div id="toast" class="toast"></div>
-
+ 
 <script>
-let TOKEN='',USER=null,DATA=null;
+/* ====== PASTE YOUR APPS SCRIPT WEB APP URL (ends with /exec) HERE ====== */
+const API_URL = 'https://script.google.com/macros/s/AKfycbzXHBK3nmsj64LW88vHMtIOf4VqgLmeXuAOyCEE8qRWM3uXsdfm-YsfyAwzCokfZ5WzkQ/exec';
+ 
+let TOKEN='', USER=null, DATA=null, VH=[], EMP=[];
 const $=id=>document.getElementById(id);
 const money=n=>'₹'+Number(n||0).toLocaleString('en-IN',{maximumFractionDigits:2});
-const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+const today=()=>new Date().toISOString().slice(0,10);
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const isSA=()=>USER&&USER.role==='Super Admin', isSup=()=>USER&&USER.role!=='Employee';
 function toast(m){$('toast').textContent=m;$('toast').style.display='block';setTimeout(()=>$('toast').style.display='none',3500)}
-
-/* ---------- Backend connection ---------- */
-// If you redeploy Code.gs as a NEW deployment, paste the new Web app URL here.
-const API_URL='https://script.google.com/macros/s/AKfycbzXHBK3nmsj64LW88vHMtIOf4VqgLmeXuAOyCEE8qRWM3uXsdfm-YsfyAwzCokfZ5WzkQ/exec';
-let pending=0;
-async function call(fn,...args){
-  pending++;document.body.classList.add('busy');
-  try{
-    let res;
-    try{res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({fn,args})})}
-    catch(e){throw new Error('Server se connect nahi ho paaya. Internet aur API_URL check karo.')}
-    const data=await res.json();
-    if(!data.ok)throw new Error(data.error);
-    return data.result;
-  }finally{if(--pending<=0){pending=0;document.body.classList.remove('busy')}}
+async function api(fn,...args){
+  if(API_URL.indexOf('http')!==0) throw new Error('API_URL not set in the HTML file');
+  const res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({fn,args})});
+  const d=await res.json(); if(!d.ok) throw new Error(d.error); return d.result;
 }
+async function act(fn,...args){DATA=await api(fn,TOKEN,...args);renderAll();refreshViews();return DATA}
+async function guard(f,msg){try{await f();if(msg)toast(msg)}catch(e){toast(e.message);if(/Session/.test(e.message))doLogout()}}
+ 
+const NAV=[['dashboard','Dashboard'],['transactions','Transactions'],['approvals','Approvals'],['rounds','Doctor Rounds'],['vendors','Vendors & Dues'],['employees','Employees'],['reports','Reports'],['staff','Staff & Settings']];
+function buildNav(){$('nav').innerHTML=NAV.filter(n=>n[0]!=='staff'||isSA()).map((n,i)=>`<button class="${i?'':'active'}" onclick="showSection('${n[0]}',this)">${n[1]}</button>`).join('')}
+function showSection(id,btn){
+  document.querySelectorAll('.section').forEach(x=>x.classList.remove('active'));$(id).classList.add('active');
+  document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');
+  $('pageTitle').textContent=NAV.find(n=>n[0]===id)[1];refreshViews();
+}
+function refreshViews(){const a=document.querySelector('.section.active').id;if(a==='transactions')loadVH();if(a==='employees')loadEmp()}
+async function refresh(){await guard(async()=>{DATA=await api('getBootstrap',TOKEN);renderAll();refreshViews()})}
+ 
+async function doLogin(){await guard(async()=>{
+  const r=await api('login',$('loginUser').value,$('loginPass').value);if(!r.ok)throw new Error(r.message);
+  TOKEN=r.token;USER=r.user;DATA=r.data;buildNav();
+  $('loginScreen').style.display='none';$('app').style.display='block';
+  $('userChip').textContent=USER.name+' · '+USER.role;$('sideName').textContent=USER.name;$('sideRole').textContent=USER.role;
+  $('empAdd').style.display=isSup()?'block':'none';renderAll();
+})}
+async function doLogout(){try{await api('logout',TOKEN)}catch(e){}TOKEN='';USER=null;$('app').style.display='none';$('loginScreen').style.display='grid';$('loginPass').value=''}
+ 
+function table(rows,cols,actFn){
+  if(!rows||!rows.length)return '<div class="empty">No records yet</div>';
+  const M=['Amount','income','expense','Opening Due','Rate','Paid Amount','Balance','Debit','Credit','Base Salary','Total Advance','Advance (Month)','Extra Duty Amount','Last Purchase Rate','Fee','Paid'];
+  return `<div class="table-wrap"><table><thead><tr>${cols.map(c=>`<th>${esc(c)}</th>`).join('')}${actFn?'<th></th>':''}</tr></thead><tbody>${rows.map((r,i)=>'<tr>'+cols.map(c=>{
+    let v=r[c]??'';
+    if(c==='Status'||c==='Payment Status')return `<td><span class="status ${esc(v)}">${esc(v)}</span></td>`;
+    if(c==='Proof URL')return `<td>${v?`<a href="${esc(v)}" target="_blank" rel="noopener">Open</a>`:''}</td>`;
+    if(['Qty','Rate','Last Purchase Rate'].includes(c)&&v==='')v='NA';else if(M.includes(c)&&v!=='')v=money(v);return `<td>${esc(v)}</td>`}).join('')+(actFn?`<td>${actFn(r,i)}</td>`:'')+'</tr>').join('')}</tbody></table></div>`;
+}
+function bars(list){if(!list||!list.length)return '<div class="empty">No approved data this month</div>';const mx=Math.max(...list.map(x=>x.amount));
+  return list.map(x=>`<div style="padding:7px 0"><div class="row" style="border:0;padding:0"><span>${esc(x.name)}</span><b>${money(x.amount)}</b></div><div class="hb" style="width:${Math.max(3,x.amount/mx*100)}%"></div></div>`).join('')}
+ 
+function renderAll(){
+  if(!DATA)return;const d=DATA.dashboard;
+  const C=[['Approved income',money(d.totalIn),'All approved entries'],['Approved expenses',money(d.totalOut),'Payments, vouchers, payroll'],['Net position',money(d.net),'Income minus expenses'],['Pending approvals',d.pending,money(d.pendingAmount)+' awaiting'],
+    ['Spent today',money(d.todayOut),'Approved only'],['Spent this month',money(d.monthOut),'Approved only'],['Salary advance given',money(d.advanceTotal),'All employees'],['Vendor dues',money(d.duesTotal),'Outstanding']];
+  $('dCards').innerHTML=C.map(c=>`<div class="card" style="margin:0"><div class="metric-label">${c[0]}</div><div class="metric">${c[1]}</div><div class="note">${c[2]}</div></div>`).join('');
+  const mx=Math.max(1,...(d.monthly||[]).map(x=>Math.max(x.income,x.expense)));
+  $('cashChart').innerHTML=(d.monthly||[]).map(m=>`<div class="bg"><div class="bp"><div class="bar" style="height:${m.income/mx*135}px" title="${money(m.income)}"></div><div class="bar e" style="height:${m.expense/mx*135}px" title="${money(m.expense)}"></div></div><div class="bl">${esc(m.month.slice(2))}</div></div>`).join('')||'<div class="empty">No approved data yet</div>';
+  $('dCat').innerHTML=bars(d.byCategory);$('dHeads').innerHTML=bars(d.topHeads);
+  $('duesTotal').textContent=money(d.duesTotal);
+  const dues=d.dues.map(v=>`<div class="row"><span>${esc(v.name)}</span><b>${money(v.due)}</b></div>`).join('')||'<div class="empty">No outstanding dues</div>';
+  $('duesPreview').innerHTML=d.dues.slice(0,6).map(v=>`<div class="row"><span>${esc(v.name)}</span><b>${money(v.due)}</b></div>`).join('')||'<div class="empty">No outstanding dues</div>';
+  $('vendorDues').innerHTML=dues;
+  $('recentTable').innerHTML=table(DATA.transactions.slice(0,8),['Date','Type','Head','Amount','Payment Mode','Status']);
+  $('txTable').innerHTML=table(DATA.transactions,['Date','Transaction ID','Type','Head','Amount','Payment Mode','Submitted By','Status','Proof URL']);
+  $('roundTable').innerHTML=table(DATA.rounds,['Date','Voucher No','Doctor Name','Round Type','Patient Name','Amount','Paid Amount','Balance','Payment Status','Status','Entered By','Proof URL'],
+    r=>r.Balance>0?`<button class="secondary sm" onclick="payRound('${esc(r['Round ID'])}',${r.Balance})">Add payment</button>`:'');
+  const q=[];
+  DATA.transactions.filter(x=>x.Status==='Pending').forEach(x=>q.push({t:'transaction',id:x['Transaction ID'],d:x.Date,det:x.Type+' · '+x.Head,a:x.Amount,by:x['Submitted By']}));
+  DATA.rounds.filter(x=>x.Status==='Pending').forEach(x=>q.push({t:'round',id:x['Round ID'],d:x.Date,det:'Round · '+x['Doctor Name'],a:x.Amount,by:x['Entered By']}));
+  DATA.payments.filter(x=>x.Status==='Pending').forEach(x=>q.push({t:'payment',id:x['Payment ID'],d:x['Payment Date'],det:'Vendor · '+x['Vendor Name'],a:x.Amount,by:x['Paid By']}));
+  (DATA.pendingVouchers||[]).forEach(x=>q.push({t:'voucher',id:x['Line ID'],d:x.Date,det:x.Category+' · '+x.Particulars+(x['Employee Name']?' · '+x['Employee Name']:''),a:x.Amount,by:x['Entered By']}));
+  $('approvalTable').innerHTML=!isSup()?'<div class="empty">Approvals are for Supervisors and Super Admins.</div>':q.length?`<div class="table-wrap"><table><thead><tr><th>Type</th><th>ID</th><th>Date</th><th>Details</th><th>Amount</th><th>By</th><th></th></tr></thead><tbody>${q.map(x=>`<tr><td>${x.t}</td><td>${esc(x.id)}</td><td>${esc(x.d)}</td><td>${esc(x.det)}</td><td>${money(x.a)}</td><td>${esc(x.by)}</td><td><button class="blue sm" onclick="decide('${x.t}','${esc(x.id)}','approve')">Approve</button> <button class="secondary sm" onclick="decide('${x.t}','${esc(x.id)}','reject')">Reject</button></td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">No pending approvals</div>';
+  const opts=DATA.vendors.map(v=>`<option value="${esc(v['Vendor ID'])}">${esc(v['Vendor Name'])}</option>`).join('');$('billVendor').innerHTML=opts;$('payVendor').innerHTML=opts;
+  $('vendorTable').innerHTML=table(DATA.vendors,['Vendor ID','Vendor Name','Contact','Category','Opening Due','Active'],r=>`<button class="secondary sm" onclick="ledger('${esc(r['Vendor ID'])}')">Ledger</button>`);
+  $('billTable').innerHTML=table(DATA.bills,['Bill Date','Bill ID','Vendor Name','Bill Number','Amount','Description']);
+  $('reportContent').innerHTML=`<div class="grid"><div class="card"><div class="metric-label">Income</div><div class="metric">${money(d.totalIn)}</div></div><div class="card"><div class="metric-label">Expenses</div><div class="metric">${money(d.totalOut)}</div></div><div class="card"><div class="metric-label">Vendor dues</div><div class="metric">${money(d.duesTotal)}</div></div><div class="card"><div class="metric-label">Pending</div><div class="metric">${d.pending}</div></div></div><h2>Monthly cashflow</h2>${table(d.monthly,['month','income','expense'])}`;
+  $('staffTable').innerHTML=isSA()?table(DATA.users,['username','name','email','role','active']):'';
+  $('headSelect').innerHTML=(DATA.heads||[]).map(h=>`<option>${esc(h)}</option>`).join('');
+  document.querySelectorAll('input[type=date][name]').forEach(x=>{if(!x.value)x.value=today()});
+  if(!$('empMonth').value)$('empMonth').value=today().slice(0,7);
+}
+ 
+/* ---------- Voucher popups ---------- */
+const FIX={'Extra Duty':['Extra Duty'],'Salary Advance':['Salary Advance'],'Doctor Pay':['DOC OPD FEE','DOC ON CALL FEE']};
+const MODES=['Cash','Online','RTGS','UPI','Cheque','Other'];
+let VCAT='';
+function openM(html){$('mbox').innerHTML=html;$('modal').style.display='grid'}
+function closeM(){$('modal').style.display='none'}
+function openVoucher(cat){
+  VCAT=cat;const emp=cat==='Extra Duty'||cat==='Salary Advance',pur=cat==='Purchasing';
+  const who=pur?'Address':cat==='Doctor Pay'?'Doctor name':'Employee';
+  openM(`<div class="panel-head"><h2>${cat} voucher</h2><div class="actions" style="margin:0">${pur&&isSA()?'<button class="secondary sm" onclick="editHeads()">Edit heads</button>':''}<button class="secondary sm" onclick="closeM()">Close</button></div></div>
+  <div class="form-grid"><div><label>Date</label><input id="vDate" type="date" value="${today()}"></div><div><label>Receipt / proof</label><input id="vProof" type="file" accept="image/jpeg,image/png,image/webp,application/pdf"></div></div>
+  <div class="table-wrap" style="margin-top:12px"><table id="vTab"><thead><tr><th>S No.</th><th>Particulars</th><th>Head</th><th>${emp&&cat==='Extra Duty'?'Duties':'Qty'}</th><th>Rate</th><th>Amount</th><th>Mode of payment</th>${pur?'<th>Last purchase rate</th>':''}<th>${who}</th><th>Required by</th><th></th></tr></thead><tbody></tbody></table></div>
+  <div class="actions"><button class="secondary" onclick="addVRow()">+ Add row</button><button class="blue" onclick="saveV()">Submit for approval</button><b id="vTot" style="align-self:center;margin-left:auto"></b></div>`);
+  addVRow();
+}
+function addVRow(){
+  const cat=VCAT,pur=cat==='Purchasing',emp=cat==='Extra Duty'||cat==='Salary Advance';
+  const heads=pur?DATA.purchaseHeads:FIX[cat];
+  const who=emp?`<select class="w">${DATA.employees.filter(e=>e.Status!=='Inactive').map(e=>`<option value="${esc(e['Employee ID'])}">${esc(e.Name)}</option>`).join('')}</select>`:`<input class="w" placeholder="${pur?'Address':'Doctor name'}">`;
+  const tr=document.createElement('tr');
+  tr.innerHTML=`<td class="sn"></td><td><input class="p"></td><td><select class="h">${heads.map(h=>`<option>${esc(h)}</option>`).join('')}</select></td>
+  <td><input class="q" type="number" min="0" step="any" style="min-width:60px"></td><td><input class="r" type="number" min="0" step="any" style="min-width:70px"></td><td><input class="a" type="number" min="0" step="0.01" style="min-width:90px"></td>
+  <td><select class="m">${MODES.map(m=>`<option>${m}</option>`).join('')}</select></td>${pur?'<td><input class="l" type="number" min="0" step="any" style="min-width:70px"></td>':''}<td>${who}</td><td><input class="rb" value="${esc(USER.name)}"></td><td><button class="secondary sm" onclick="this.closest('tr').remove();vTotal()">✕</button></td>`;
+  tr.addEventListener('input',e=>{if(e.target.classList.contains('q')||e.target.classList.contains('r')){const q=+tr.querySelector('.q').value,r=+tr.querySelector('.r').value;if(q>0&&r>0)tr.querySelector('.a').value=Math.round(q*r*100)/100}vTotal()});
+  $('vTab').tBodies[0].appendChild(tr);vTotal();
+}
+function vTotal(){document.querySelectorAll('#vTab .sn').forEach((x,i)=>x.textContent=i+1);let t=0;document.querySelectorAll('#vTab .a').forEach(x=>t+=+x.value||0);$('vTot').textContent='Total: '+money(t)}
+async function saveV(){await guard(async()=>{
+  const g=(tr,c)=>{const e=tr.querySelector('.'+c);return e?e.value:''};
+  const lines=[...document.querySelectorAll('#vTab tbody tr')].map(tr=>({particulars:g(tr,'p'),head:g(tr,'h'),who:g(tr,'w'),qty:g(tr,'q'),rate:g(tr,'r'),amount:g(tr,'a'),mode:g(tr,'m'),last:g(tr,'l'),requiredBy:g(tr,'rb')})).filter(l=>l.particulars||l.amount);
+  if(!lines.length)throw new Error('Fill at least one row');
+  await act('saveVoucher',{category:VCAT,date:$('vDate').value,proof:await fileData('vProof'),lines});closeM();
+},'Voucher submitted for approval')}
+async function editHeads(){
+  const cur=(DATA.purchaseHeads||[]).join('\n');
+  openM(`<h2>Purchasing heads</h2><div class="note">One head per line. Removing a head does not change old vouchers.</div><textarea id="hList" style="min-height:240px">${esc(cur)}</textarea><div class="actions"><button class="blue" onclick="saveHeadList()">Save heads</button><button class="secondary" onclick="openVoucher('Purchasing')">Back</button></div>`);
+}
+async function saveHeadList(){await guard(async()=>{await act('saveHeads',$('hList').value.split('\n'));openVoucher('Purchasing')},'Heads updated')}
+ 
+/* ---------- Voucher history ---------- */
+async function loadVH(){await guard(async()=>{
+  const f={category:$('fCat').value,from:$('fFrom').value,to:$('fTo').value,head:$('fHead').value.trim(),status:$('fSt').value,q:$('fQ').value};
+  const r=await api('voucherReport',TOKEN,f);VH=r.rows.slice().reverse();
+  $('vhSum').innerHTML=`<div class="grid" style="margin-bottom:12px"><div class="card" style="margin:0"><div class="metric-label">Entries</div><div class="metric">${r.count}</div></div><div class="card" style="margin:0"><div class="metric-label">Total</div><div class="metric">${money(r.total)}</div></div><div class="card" style="margin:0"><div class="metric-label">Approved</div><div class="metric">${money(r.approved)}</div></div><div class="card" style="margin:0"><div class="metric-label">Pending</div><div class="metric">${money(r.pending)}</div></div></div>${r.byHead.length?'<h2>By head</h2>'+table(r.byHead,['Head','Amount']):''}<h2 style="margin-top:14px">Entries</h2>`;
+  $('vhTable').innerHTML=table(VH,['Date','Line ID','Category','Particulars','Head','Qty','Rate','Amount','Payment Mode','Last Purchase Rate','Address/Doctor','Employee Name','Required By','Approved By','Status','Entered By','Edited By','Edited At','Proof URL'],isSA()?(r,i)=>`<button class="secondary sm" onclick="editV(${i})">Edit</button>`:null);
+})}
+function editV(i){
+  const r=VH[i],pur=r.Category==='Purchasing',dp=r.Category==='Doctor Pay';
+  const heads=pur?DATA.purchaseHeads:dp?FIX['Doctor Pay']:null;
+  openM(`<h2>Edit ${esc(r.Category)} · ${esc(r['Line ID'])}</h2><div class="form-grid">
+  <div><label>Particulars</label><input id="eP" value="${esc(r.Particulars)}"></div>
+  ${heads?`<div><label>Head</label><select id="eH">${heads.map(h=>`<option ${h===r.Head?'selected':''}>${esc(h)}</option>`).join('')}</select></div><div><label>${pur?'Address':'Doctor name'}</label><input id="eW" value="${esc(r['Address/Doctor'])}"></div>`:''}
+  <div><label>Qty</label><input id="eQ" type="number" step="any" value="${esc(r.Qty)}"></div><div><label>Rate</label><input id="eR" type="number" step="any" value="${esc(r.Rate)}"></div>
+  <div><label>Amount</label><input id="eA" type="number" step="0.01" value="${esc(r.Amount)}"></div><div><label>Mode</label><select id="eM">${MODES.map(m=>`<option ${m===r['Payment Mode']?'selected':''}>${m}</option>`).join('')}</select></div>
+  ${pur?`<div><label>Last purchase rate</label><input id="eL" type="number" step="any" value="${esc(r['Last Purchase Rate'])}"></div>`:''}<div><label>Required by</label><input id="eB" value="${esc(r['Required By'])}"></div></div>
+  <div class="actions"><button class="blue" onclick="saveEditV('${esc(r['Line ID'])}')">Save changes</button><button class="secondary" onclick="closeM()">Cancel</button></div>`);
+}
+async function saveEditV(id){await guard(async()=>{const v=k=>$(k)?$(k).value:undefined;
+  await act('updateVoucherLine',id,{particulars:v('eP'),head:v('eH'),who:v('eW'),qty:v('eQ'),rate:v('eR'),amount:v('eA'),mode:v('eM'),last:v('eL'),requiredBy:v('eB')});closeM()},'Entry updated')}
+ 
+function printV(){
+  const rows=VH.filter(r=>r.Status!=='Rejected').slice().reverse();
+  if(!rows.length)return toast('No entries to print');
+  const na=v=>v===''||v==null?'NA':esc(v);
+  const blocks=[...new Set(rows.map(r=>r.Date))].map(d=>{
+    const L=rows.filter(r=>r.Date===d);let tot=0;const t=(L[0]['Edited At']||'').slice(11);
+    const body=L.map((r,i)=>{tot+=+r.Amount||0;return `<tr><td>${i+1}</td><td>${esc(r.Particulars)}</td><td>${esc(r.Head)}</td><td>${na(r.Qty)}</td><td>${na(r.Rate)}</td><td>${esc(r.Amount)}</td><td>${esc(String(r['Payment Mode']).toUpperCase())}</td><td>${na(r['Last Purchase Rate'])}</td><td>${esc(r['Address/Doctor'])}</td><td>${esc(r['Required By'])}</td><td>${esc(r['Approved By'])}</td></tr>`}).join('');
+    const by=L[L.length-1]['Edited By']||L[L.length-1]['Entered By'];
+    return `<table><tr><th colspan="11">DATE - ${d.split('-').reverse().join('.')} ${t?'TIME '+t:''}</th></tr><tr><th>S NO.</th><th>PARTICULARS</th><th>HEAD</th><th>QTY</th><th>RATE</th><th>AMOUNT</th><th>MODE OF PAYMENT</th><th>LAST PURCHASE RATE</th><th>PURCHASE ADDRESS / DOCTORS</th><th>REQUIRED BY</th><th>APPROVED BY</th></tr>${body}<tr><th>TOTAL</th><th colspan="4"></th><th>${tot}</th><th colspan="5"></th></tr><tr><th colspan="11"><i>EDIT BY : - ${esc(by)}</i></th></tr></table>`}).join('');
+  const w=window.open('','_blank');
+  w.document.write(`<html><head><title>Vouchers</title><style>table{width:100%;border-collapse:collapse;background:#ffc000;font-family:Arial;margin-bottom:16px}th,td{border:1px solid #000;padding:6px;text-align:center;font-size:12px}th{font-weight:bold}td{background:#fff;font-weight:600}@media print{button{display:none}}</style></head><body>${blocks}<button onclick="print()">Print</button></body></html>`);w.document.close();
+}
+/* ---------- Employees ---------- */
+async function loadEmp(){await guard(async()=>{
+  if(!isSup()){$('empTable').innerHTML=table(DATA.employees,['Employee ID','Name','Designation','Working Hours','Status','Edited By']);return}
+  EMP=await api('employeeSummary',TOKEN,$('empMonth').value);
+  $('empTable').innerHTML=table(EMP,['Employee ID','Name','Designation','Working Hours','Base Salary','Total Advance','Advance (Month)','Extra Duty Qty','Extra Duty Amount','Status','Edited By'],isSA()?(r,i)=>`<button class="secondary sm" onclick="editEmp(${i})">Edit</button>`:null);
+})}
+function editEmp(i){
+  const s=EMP[i],e=DATA.employees.find(x=>x['Employee ID']===s['Employee ID'])||{};const f=(l,id,v,t)=>`<div><label>${l}</label><input id="${id}" type="${t||'text'}" value="${esc(v)}"></div>`;
+  openM(`<h2>Edit employee · ${esc(s['Employee ID'])}</h2><div class="form-grid">${f('Name','xN',e.Name)}${f('Designation','xD',e.Designation)}${f('Department','xP',e.Department)}${f('Phone','xH',e.Phone)}${f('Joining date','xJ',e['Joining Date'],'date')}${f('Monthly salary','xS',e['Monthly Salary'],'number')}${f('Working hours','xW',e['Working Hours'])}${f('Notes','xT',e.Notes)}
+  <div><label>Status</label><select id="xU"><option ${e.Status!=='Inactive'?'selected':''}>Active</option><option ${e.Status==='Inactive'?'selected':''}>Inactive</option></select></div></div>
+  <div class="actions"><button class="blue" onclick="saveEmp('${esc(s['Employee ID'])}')">Save changes</button><button class="secondary" onclick="closeM()">Cancel</button></div>`);
+}
+async function saveEmp(id){await guard(async()=>{const v=k=>$(k).value;
+  await act('updateEmployee',id,{name:v('xN'),designation:v('xD'),department:v('xP'),phone:v('xH'),joining:v('xJ'),salary:v('xS'),hours:v('xW'),notes:v('xT'),status:v('xU')});closeM()},'Employee updated')}
+const fo=f=>Object.fromEntries(new FormData(f).entries());
+async function submitEmp(e){e.preventDefault();await guard(async()=>{await act('addEmployee',fo(e.target));e.target.reset()},'Employee added')}
+ 
+/* ---------- Other forms ---------- */
 async function fileData(id){const f=$(id).files[0];if(!f)return null;if(f.size>5*1024*1024)throw new Error('File must be 5 MB or smaller');return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res({data:r.result,mime:f.type});r.onerror=rej;r.readAsDataURL(f)})}
-
-/* ---------- UI ---------- */
-async function doLogin(){try{const r=await call('login',$('loginUser').value,$('loginPass').value);if(!r.ok)throw new Error(r.message);TOKEN=r.token;USER=r.user;DATA=r.data;renderAll();$('loginScreen').style.display='none';$('app').style.display='block';$('userChip').textContent=USER.name+' · '+USER.role;$('sideName').textContent=USER.name;$('sideRole').textContent=USER.role}catch(e){toast(e.message)}}
-async function doLogout(){TOKEN='';USER=null;$('app').style.display='none';$('loginScreen').style.display='grid'}
-async function loadData(){try{DATA=await call('getBootstrap',TOKEN);renderAll()}catch(e){toast(e.message);if(String(e.message).includes('Session'))doLogout()}}
-function showSection(id,btn){document.querySelectorAll('.section').forEach(x=>x.classList.remove('active'));$(id).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');$('pageTitle').textContent=({dashboard:'Dashboard',transactions:'Transactions',approvals:'Approval Queue',rounds:'Doctor Round Fee',vendors:'Vendors & Dues',reports:'Finance Reports',staff:'Staff & Settings',employees:'Employees',docpay:'Doctor Payments'})[id];if(id==='rounds')runRoundReport()}
-function renderAll(){if(!DATA)return;const d=DATA.dashboard;
-$('mIncome').textContent=money(d.totalIn);$('mExpense').textContent=money(d.totalOut);$('mNet').textContent=money(d.net);$('mPending').textContent=d.pending;$('duesTotal').textContent=money(d.duesTotal);
-const max=Math.max(1,...d.monthly.map(x=>Math.max(x.income,x.expense)));
-$('cashChart').innerHTML=d.monthly.map(m=>`<div class="bar-group"><div class="bar-pair"><div class="bar" style="height:${m.income/max*140}px" title="${money(m.income)}"></div><div class="bar exp" style="height:${m.expense/max*140}px" title="${money(m.expense)}"></div></div><div class="bar-label">${esc(m.month)}</div></div>`).join('')||'<div class="empty">No approved data yet</div>';
-$('duesPreview').innerHTML=d.dues.slice(0,6).map(v=>`<div class="list-row"><span>${esc(v.name)}</span><b>${money(v.due)}</b></div>`).join('')||'<div class="empty">No outstanding vendor dues</div>';
-$('recentTable').innerHTML=table(DATA.transactions.slice(0,8),['Date','Type','Head','Amount','Payment Mode','Status']);
-$('txTable').innerHTML=table(DATA.transactions,['Date','Transaction ID','Type','Head','Amount','Payment Mode','Submitted By','Status','Proof URL']);
-if($('rounds').classList.contains('active'))runRoundReport();
-let q=[];DATA.transactions.filter(x=>x.Status==='Pending').forEach(x=>q.push({...x,_type:'transaction'}));DATA.rounds.filter(x=>x.Status==='Pending').forEach(x=>q.push({...x,_type:'round'}));DATA.payments.filter(x=>x.Status==='Pending').forEach(x=>q.push({...x,_type:'payment'}));(DATA.empTx||[]).filter(x=>x.Status==='Pending').forEach(x=>q.push({...x,_type:'emptx'}));(DATA.docPay||[]).filter(x=>x.Status==='Pending').forEach(x=>q.push({...x,_type:'docpay'}));
-const idOf=x=>x['Transaction ID']||x['Round ID']||x['Payment ID']||x['Entry ID'];
-$('approvalTable').innerHTML=USER.role==='Employee'?'<div class="empty">Approval actions are available to Supervisors and Super Admins.</div>':q.length?`<div class="table-wrap"><table><thead><tr><th>Type</th><th>ID</th><th>Date</th><th>Details</th><th>Amount</th><th>Submitted By</th><th>Action</th></tr></thead><tbody>${q.map(x=>`<tr><td>${esc(x._type)}</td><td>${esc(idOf(x))}</td><td>${esc(x.Date||x['Payment Date'])}</td><td>${esc(x.Head||(x['Employee Name']&&x['Employee Name']+' – '+x.Category)||(x['Doctor Name']&&x['Doctor Name']+(x.Type?' – '+x.Type:''))||x['Vendor Name']||'')}</td><td>${money(x.Amount)}</td><td>${esc(x['Submitted By']||x['Entered By']||x['Paid By'])}</td><td><button class="blue" onclick="decide('${x._type}','${esc(idOf(x))}','approve')">Approve</button> <button class="secondary" onclick="decide('${x._type}','${esc(idOf(x))}','reject')">Reject</button></td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">No pending approvals</div>';
-$('billVendor').innerHTML=DATA.vendors.map(v=>`<option value="${esc(v['Vendor ID'])}">${esc(v['Vendor Name'])}</option>`).join('');$('payVendor').innerHTML=$('billVendor').innerHTML;
-$('vendorTable').innerHTML=table(DATA.vendors,['Vendor ID','Vendor Name','Contact','Category','Opening Due','Active']);
-$('vendorDues').innerHTML=d.dues.map(v=>`<div class="list-row"><span>${esc(v.name)}</span><b>${money(v.due)}</b></div>`).join('')||'<div class="empty">No dues</div>';
-$('reportContent').innerHTML=`<div class="grid"><div class="card"><div class="metric-label">Income</div><div class="metric">${money(d.totalIn)}</div></div><div class="card"><div class="metric-label">Expenses</div><div class="metric">${money(d.totalOut)}</div></div><div class="card"><div class="metric-label">Vendor Dues</div><div class="metric">${money(d.duesTotal)}</div></div><div class="card"><div class="metric-label">Pending</div><div class="metric">${d.pending}</div></div></div><h2 style="margin-top:20px">Monthly Cashflow</h2>${table(d.monthly,['month','income','expense'])}`;
-$('staffTable').innerHTML=USER.role==='Super Admin'?table(DATA.users,['username','name','email','role','active']):'<div class="empty">Super Admin only</div>';
-$('staffNav').style.display=USER.role==='Super Admin'?'block':'none';
-$('headSelect').innerHTML=DATA.heads.map(h=>`<option>${esc(h)}</option>`).join('');
-document.querySelectorAll('input[type=date]:not([data-keep])').forEach(x=>{if(!x.value)x.value=today()});renderExtra()}
-function table(rows,cols,act){if(!rows||!rows.length)return '<div class="empty">No records yet</div>';return `<div class="table-wrap"><table><thead><tr>${cols.map(c=>`<th>${esc(c)}</th>`).join('')}${act?'<th>Action</th>':''}</tr></thead><tbody>${rows.map(r=>'<tr>'+cols.map(c=>{let v=r[c]??'';if(c==='Status'||c==='Payment Status')return `<td><span class="status ${esc(v)}">${esc(v)}</span></td>`;if(c==='Proof URL'&&v)return `<td><a href="${esc(v)}" target="_blank" rel="noopener">Open proof</a></td>`;if(['Amount','income','expense','Opening Due','Paid Amount','Balance','Monthly Salary','Debit','Credit','Fee','Paid'].includes(c))v=v===''?'':money(v);return `<td>${esc(v)}</td>`}).join('')+(act?'<td>'+act(r)+'</td>':'')+'</tr>').join('')}</tbody></table></div>`}
-function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-const formObj=f=>Object.fromEntries(new FormData(f).entries());
-function apply(r){if(r&&r.dashboard){DATA=r;renderAll()}else return loadData()}
-async function act(e,fn,args,msg,reset=true){e.preventDefault();const f=e.target;try{const r=await call(fn,TOKEN,...args);if(reset)f.reset();await apply(r);toast(msg)}catch(x){toast(x.message)}}
-const submitTransaction=async e=>{e.preventDefault();const p=formObj(e.target);try{p.proof=await fileData('txProof')}catch(x){return toast(x.message)}return act(e,'saveTransaction',[p],'Transaction submitted for approval')};
-const submitRound=async e=>{e.preventDefault();const p=formObj(e.target);try{p.proof=await fileData('roundProof')}catch(x){return toast(x.message)}return act(e,'saveDoctorRound',[p],'Doctor round entry saved')};
-const submitVendor=e=>act(e,'addVendor',[formObj(e.target)],'Vendor added');
-const submitBill=async e=>{e.preventDefault();const p=formObj(e.target);try{p.proof=await fileData('billProof')}catch(x){return toast(x.message)}return act(e,'addVendorBill',[p],'Vendor bill saved')};
-const submitPayment=async e=>{e.preventDefault();const p=formObj(e.target);try{p.proof=await fileData('payProof')}catch(x){return toast(x.message)}return act(e,'payVendor',[p],'Payment submitted for approval')};
-const submitStaff=e=>act(e,'addStaff',[formObj(e.target)],'Staff login created');
-const changePassword=e=>{const p=formObj(e.target);return act(e,'changeOwnPassword',[p.oldPassword,p.newPassword],'Password updated')};
-const addHead=e=>act(e,'addTransactionHead',[$('newHead').value],'Transaction head added',false).then(()=>$('newHead').value='');
-async function decide(type,id,d){try{apply(await call('approveRecord',TOKEN,type,id,d));toast('Record '+(d==='approve'?'approved':'rejected'))}catch(e){toast(e.message)}}
-
-/* ===== Employees, Doctor Payments, Rounds report, Vendor ledger ===== */
-let LASTROUND=null;
-const RCOLS=['Date','Voucher No','Round ID','Round Type','Doctor Name','Patient Name','Patient/Department','Treatment','Amount','Paid Amount','Balance','Payment Status','Status','Proof URL'];
-function sumTiles(items){return items.map(x=>`<div class="card"><div class="metric-label">${esc(x[0])}</div><div class="metric">${x[2]===0?x[1]:money(x[1])}</div>${x[3]?`<div class="metric-note">${esc(x[3])}</div>`:''}</div>`).join('')}
-function renderExtra(){
-  const isEmp=USER.role==='Employee',isAdmin=USER.role==='Super Admin',emps=DATA.employees||[];
-  $('empAddCard').style.display=isEmp?'none':'block';
-  if(!isAdmin)$('empEditCard').style.display='none';
-  $('etEmp').innerHTML=emps.filter(e=>e.Status!=='Inactive').map(e=>`<option value="${esc(e['Employee ID'])}">${esc(e.Name)} (${esc(e['Employee ID'])})</option>`).join('');
-  const lv=$('ledVendor').value;$('ledVendor').innerHTML=$('billVendor').innerHTML;if(lv)$('ledVendor').value=lv;
-  const cols=['Employee ID','Name','Designation','Department','Phone','Joining Date'].concat(isEmp?[]:['Monthly Salary']).concat(['Status']);
-  $('empTable').innerHTML=table(emps,cols,isAdmin?(r=>`<button class="secondary" onclick="editEmp('${esc(r['Employee ID'])}')">Edit</button>`):null);
-  $('billTable').innerHTML=table(DATA.bills||[],['Bill Date','Bill ID','Vendor Name','Bill Number','Amount','Description']);
-  if(!$('etMonth').value)$('etMonth').value=today().slice(0,7);
-  renderEmpTx();renderDocPay();
-}
-function renderEmpTx(){
-  const q=($('empQ').value||'').toLowerCase(),all=DATA.empTx||[];
-  $('empTxTable').innerHTML=table(all.filter(r=>!q||JSON.stringify(r).toLowerCase().includes(q)),['Date','Entry ID','Employee Name','Category','Month','Amount','Payment Mode','Entered By','Status']);
-  const ap=all.filter(r=>r.Status==='Approved');
-  $('empTxSum').innerHTML=sumTiles(['Purchasing','Extra Duty','Salary Advance','Monthly Payroll'].map(c=>[c,ap.filter(r=>r.Category===c).reduce((t,r)=>t+Number(r.Amount),0),1,'Approved']));
-}
-function renderDocPay(){
-  const q=($('dpQ').value||'').toLowerCase(),all=DATA.docPay||[];
-  $('docPayTable').innerHTML=table(all.filter(r=>!q||JSON.stringify(r).toLowerCase().includes(q)),['Date','Payment ID','Doctor Name','Type','Amount','Payment Mode','Reference','Entered By','Status']);
-  const ap=all.filter(r=>r.Status==='Approved');
-  $('docPaySum').innerHTML=sumTiles(['OPD','On-Call'].map(c=>[c+' payments',ap.filter(r=>r.Type===c).reduce((t,r)=>t+Number(r.Amount),0),1,'Approved']).concat([['Pending entries',all.filter(r=>r.Status==='Pending').length,0,'Awaiting approval']]));
-}
-function fillPayroll(){const f=$('empTxForm'),e=(DATA.employees||[]).find(x=>x['Employee ID']===f.empId.value);if(f.category.value==='Monthly Payroll'&&e&&e['Monthly Salary'])f.amount.value=e['Monthly Salary']}
-const submitEmpTx=e=>act(e,'saveEmpTx',[formObj(e.target)],'Entry submitted for approval');
-const submitEmp=e=>act(e,'addEmployee',[formObj(e.target)],'Employee added');
-const submitDocPay=e=>act(e,'saveDoctorPay',[formObj(e.target)],'Doctor payment submitted for approval');
-function editEmp(id){const r=(DATA.employees||[]).find(x=>x['Employee ID']===id);if(!r)return;const f=$('empEditForm');
-  f.id.value=id;f.name.value=r.Name||'';f.designation.value=r.Designation||'';f.department.value=r.Department||'';f.phone.value=r.Phone||'';
-  f.joining.value=r['Joining Date']||'';f.salary.value=r['Monthly Salary']||0;f.status.value=r.Status||'Active';f.notes.value=r.Notes||'';
-  $('empEditCard').style.display='block';$('empEditCard').scrollIntoView({behavior:'smooth'})}
-async function submitEmpEdit(e){e.preventDefault();const p=formObj(e.target);try{await apply(await call('updateEmployee',TOKEN,p.id,p));$('empEditCard').style.display='none';toast('Employee updated')}catch(x){toast(x.message)}}
-async function runRoundReport(){try{const r=await call('roundReport',TOKEN,formObj($('roundFilter')));LASTROUND=r;
-  $('roundSummary').innerHTML=sumTiles([['Rounds',r.count,0],['Total Fee',r.fee,1],['Collected',r.paid,1],['Balance Due',r.balance,1]]);
-  $('roundByDoc').innerHTML=table(r.byDoctor,['Doctor','Rounds','Fee','Paid','Balance']);
-  $('roundTable').innerHTML=table(r.rows,RCOLS,x=>x.Balance>0&&x.Status!=='Rejected'?`<button class="blue" onclick="payRound('${esc(x['Round ID'])}')">Add payment</button>`:'')}catch(e){toast(e.message)}}
-async function payRound(id){const v=prompt('Amount received (₹)');if(!v)return;try{await apply(await call('addRoundPayment',TOKEN,id,v));toast('Payment recorded')}catch(e){toast(e.message)}}
-function exportRounds(){if(!LASTROUND||!LASTROUND.rows.length)return toast('Nothing to export');const cols=RCOLS.filter(c=>c!=='Proof URL'),q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
-  const csv=[cols.map(q).join(',')].concat(LASTROUND.rows.map(r=>cols.map(c=>q(r[c])).join(','))).join('\n');
-  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv'}));a.download='doctor-rounds.csv';a.click()}
-async function loadLedger(){try{const id=$('ledVendor').value;if(!id)return toast('Select a vendor');const r=await call('vendorLedger',TOKEN,id);
-  $('ledSum').innerHTML=sumTiles([['Opening Due',r.opening],['Total Bills',r.bills],['Paid (approved)',r.paid],['Payment Pending',r.pending],['Outstanding',r.outstanding]]);
-  $('ledTable').innerHTML='<h2>'+esc(r.vendor)+'</h2>'+table(r.rows,['Date','Type','Reference','Description','Debit','Credit','Balance','Status'])}catch(e){toast(e.message)}}
+async function submitTx(e){e.preventDefault();await guard(async()=>{const p=fo(e.target);p.proof=await fileData('txProof');await act('saveTransaction',p);e.target.reset()},'Submitted for approval')}
+async function submitRound(e){e.preventDefault();await guard(async()=>{const p=fo(e.target);if(p.paidAmount==='')delete p.paidAmount;p.proof=await fileData('roundProof');await act('saveDoctorRound',p);e.target.reset()},'Round entry saved')}
+async function payRound(id,bal){const a=prompt('Amount received (balance '+money(bal)+')');if(!a)return;await guard(()=>act('addRoundPayment',id,a),'Payment added')}
+async function submitVendor(e){e.preventDefault();await guard(async()=>{await act('addVendor',fo(e.target));e.target.reset()},'Vendor added')}
+async function submitBill(e){e.preventDefault();await guard(async()=>{await act('addVendorBill',fo(e.target));e.target.reset()},'Bill saved')}
+async function submitPay(e){e.preventDefault();await guard(async()=>{await act('payVendor',fo(e.target));e.target.reset()},'Payment submitted for approval')}
+async function submitStaff(e){e.preventDefault();await guard(async()=>{await act('addStaff',fo(e.target));e.target.reset()},'Staff login created')}
+async function decide(t,id,d){await guard(()=>act('approveRecord',t,id,d),'Record '+d+'d')}
+async function changePw(e){e.preventDefault();await guard(async()=>{const p=fo(e.target);await act('changeOwnPassword',p.oldPassword,p.newPassword);e.target.reset()},'Password updated')}
+async function addHead(e){e.preventDefault();await guard(async()=>{await act('addTransactionHead',$('newHead').value);$('newHead').value=''},'Head added')}
+async function ledger(id){await guard(async()=>{const r=await api('vendorLedger',TOKEN,id);
+  openM(`<div class="panel-head"><h2>${esc(r.vendor)} · ledger</h2><button class="secondary sm" onclick="closeM()">Close</button></div><div class="note">Opening ${money(r.opening)} · Bills ${money(r.bills)} · Paid ${money(r.paid)} · Pending payments ${money(r.pending)} · <b>Outstanding ${money(r.outstanding)}</b></div>${table(r.rows,['Date','Type','Reference','Description','Debit','Credit','Balance','Status'])}`)})}
 $('loginPass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()});
 </script>
 </body>
 </html>
+ 
